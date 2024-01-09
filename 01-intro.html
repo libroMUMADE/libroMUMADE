@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Analítica predictiva avanzada - 1&nbsp; Introducción</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./07-basicsts.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Analítica predictiva avanzada</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prólogo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-basicsts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Conceptos y herramientas básicas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-etsSSOE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Suavizado Exponencial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-etsSSOEenSS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Suavizado exponencial en Espacio de los Estados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-etsMSOE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Suavizado Exponencial con mútiples ruidos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-extensiones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Aplicaciones</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-introR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apéndice A: Introducción a los lenguajes de programación</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-tutorialUComp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apéndice B: Tutorial de UComp</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Índice</h2>
+   
+  <ul>
+<li><a href="#origen-del-arte-o-ciencia-de-la-predicci%C3%B3n" id="toc-origen-del-arte-o-ciencia-de-la-predicción" class="nav-link active" data-scroll-target="#origen-del-arte-o-ciencia-de-la-predicci%C3%B3n"><span class="header-section-number">1.1</span> Origen del arte o ciencia de la predicción</a></li>
+  <li><a href="#clasificaci%C3%B3n-de-m%C3%A9todos-de-predicci%C3%B3n" id="toc-clasificación-de-métodos-de-predicción" class="nav-link" data-scroll-target="#clasificaci%C3%B3n-de-m%C3%A9todos-de-predicci%C3%B3n"><span class="header-section-number">1.2</span> Clasificación de métodos de predicción</a></li>
+  <li><a href="#series-temporales" id="toc-series-temporales" class="nav-link" data-scroll-target="#series-temporales"><span class="header-section-number">1.3</span> Series temporales</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><section id="origen-del-arte-o-ciencia-de-la-predicción" class="level2" data-number="1.1"><h2 data-number="1.1" class="anchored" data-anchor-id="origen-del-arte-o-ciencia-de-la-predicción">
+<span class="header-section-number">1.1</span> Origen del arte o ciencia de la predicción</h2>
+<p>Para conocer el origen de la predicción es necesario remontarse a la antigua Grecia, al oráculo de Delfos. Cuenta la mitología que el dios Zeus soltó dos águilas, una desde el este y otro desde el oeste, y el punto donde se encontraran sería el centro del universo. Las águilas se encontraron en Delfos, y en el punto exacto donde se encontraron colocó una piedra, el omphalos (ómbligo). Gaia (también llamada Gea) daba a conocer sus profecías a través de las sibilas. Además, el lugar estaba protegido por la hija de Gaia, la temible serpiente Pitón.</p>
+<p>Al igual que su padre, el dios Apolo, tenía una vida interesante a la par que complicada. No obstante, el primer logro por el que se dio a conocer, fue dar muerte a la serpiente Pitón. Dado que la serpiente Pitón era la hija de la diosa Gaia, habría que reparar tal desagravio. Por ello, Apolo tuvo que trabajar cuidando vacas durante 8 años para purificarse. Una vez pagó su deuda, arrebató el oráculo a Gaia. Desde entonces, fue conocido como Apolo pitio, el dios de la profecía y Delfos fue su principal templo.</p>
+<p>Eso es con respecto a la mitología. Excavaciones arqueológicas han mostrado que desde 1500 hasta 1100 A.C., el sitio estaba ocupado por pequeños asentamientos micénicos al final de la edad de Bronce que rezaban a la diosa Gaia. El nuevo dios Apolo llegó, quizás mediante la invasión de los Dorios, y comenzó a dominar. El resultado fue el mayor negocio de predicción más exitoso en la historia. Por casi mil años, el oráculo de Delfos era consultado para temas relacionados con negocios, política, religión y guerra. Con el auge del cristianismo y en el tercer siglo D.C., el oráculo perdería toda su fama (y negocio).</p>
+<p>El poeta Iamblichus cuenta una historia sobre el oráculo cuando todavía estaba en su máximo apogeo. Un gravador de gemas llamado Mnsarchus visitó el oráculo para preguntarle si un viaje que estaba pensando realizar sería beneficioso. El oráculo le respondió que lo sería, además, le dijo que su mujer estaba embarazada (algo que él no sabía en aquel momento) y que daría a luz a un hijo que destacaría en belleza y sabiduría.</p>
+<p>Así fue y Mnesarchus se dio cuenta que el hijo fue enviado por lo dioses, y lo llamó <strong>Pitágoras</strong> (que significa en griego, predicho por la pitia). Matemático, filósofo e incluso entrenador olímpico, Pitágoras desarrolló un nuevo sistema de predicción basado en el poder de los números en lugar del oráculo. Los detalles de cómo este sistema de predicción numérica funcionaba permanece desconocido, dado que no quedan trabajos escritos por Pitágoras. Lo poco que se conoce sobre el legado de Pitágoras se debe a filósofos posteriores como Platón y Aristóteles.</p>
+<p>Hasta ahora hemos introducido la historia acerca del arte de la predicción. No obstante, es interesante destacar que aunque en el idioma español no distiguimos entre las predicciones que se realizan de forma científica y las que se realizan mediante técnicas de adivinación (bola de cristal, tarot, etc..). En inglés si existe dicha palabra y es <strong>forecasting</strong>, cuyo origen creo es digno de mencionar.</p>
+<p>Una de las aplicaciones más famosas del arte de la predicción es la meteorología y de hecho, la meteorología está muy relacionada con la palabra inglesa <em>forecast</em>. Si nos remontamos a Reino Unido en 1854, el Almirante Robert FitzRoy, que había capitaneado el <em>Beagle</em>, barco en el que viajó Darwin alrededor del mundo, <a href="#fig-figbeable">Figura&nbsp;<span>1.1</span></a>, estableció la primera oficina meteorológica. Este ex-marinero sabía cómo las predicciones meteorológicas tenían potencial para salvar vidas de los marineros advirtiendo las tormentas.</p>
+<div id="fig-figbeable" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="beagle.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figura&nbsp;1.1: Acuarela con la llegada del Beagle a Wualia. Autor: Conrad Martens.</figcaption></figure>
+</div>
+<p>Lamentablemente, los esfuerzos de FitzRoy no fueron bien recibidos por el público ni por la comunidad científica en aquella época, donde las predicciones meteorológicas provenían principalmente de los astrólogos. Para evitar que compararán sus predicciones con la astrología evitó utilizar palabras como <em>prediction</em>, y en su lugar, inventó una nueva <em>forecast</em>, que la definió de la siguiente manera: <em>The term forecast is strictly applicable to such an opinion as is the result of a scientific combination and calculation</em></p>
+</section><section id="clasificación-de-métodos-de-predicción" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="clasificación-de-métodos-de-predicción">
+<span class="header-section-number">1.2</span> Clasificación de métodos de predicción</h2>
+<p>Dado que existe una amplia amalgama de técnicas de predicción, hacer una clasificación exhaustiva de dichas técnicas sería algo complicado. No obstante, una primera aproximación a una clasificación podría ser la siguiente:</p>
+<ol type="1">
+<li>
+<p><strong>Métodos Cualitativos</strong>: Este tipo de métodos no utilizan ningún tipo de algoritmo matemático, sino que sus predicciones se basan en experiencias, opiniones, consejo de expertos, intuiciones, rumores. A este tipo de información también se le conoce como <em>soft information</em>. Entre los métodos cualitativos más conocidos se encuentran:</p>
+<ul>
+<li><p><strong>Método Delphi</strong>: Pronóstico desarrollado mediante un grupo de expertos que responden preguntas en rondas sucesivas. Las respuestas anónimas del grupo retroalimentan en cada ronda a todos los participantes. Se pueden usar entre tres y seis rondas para lograr un consenso sobre el pronóstico. El método Delphi fue desarrollado en 1948 al inicio de la guerra fría por la corporación RAND para el departamento de defensa de los EEUU para investigar qué ocurriría en una guerra nuclear.</p></li>
+<li><p><strong>Estudios de mercado</strong>: Grupos, cuestionarios, pruebas de mercado o estudios que se usan para obtener datos sobre las condiciones del mercado, generalmente sobre intención de compra de un determinado producto</p></li>
+<li><p><strong>Juicio de expertos</strong>: Pronóstico que puede hacer un grupo o un individuo basándose en sus experiencias, intuición o hechos relacionados con la situación. No se usa método riguroso</p></li>
+</ul>
+</li>
+<li>
+<p><strong>Métodos Cuantitativos</strong>: Son métodos que implican algún tipo de ecuación matemática basados en información cuantitativa como ventas anteriores, datos de inventarios, promociones, etc. A este tipo de información también se le conoce como <em>hard information</em>. A la hora de realizar predicciones mediante métodos cuantitativos, los métodos más conocidos se pueden clasificar en función del número de variables que se incluyan en el modelo.</p>
+<ul>
+<li><p><strong>Series temporales o modelos extrapolativos</strong>: Una serie temporal es simplemente el conjunto de valores de una determinada variable ordenados con respecto al tiempo. La <a href="#fig-fig10">Figura&nbsp;<span>1.2</span></a> muestra algunos ejemplos de series temporales que podrán ser analizadas con los métodos que se proponen en este libro. Las series que se muestran en la figura desde izquierda a derecha y desde arriba hacia abajo son las cotizaciones medias diarias del IBEX-35, las entradas mensuales de pasajeros internacionales por avión en España, el PIB per capita trimestral en términos reales y poder de paridad de compra de España, y el caudal anual del río Nilo a su paso por Assuan. Dado que sólo se analiza una variable también se les conoce como modelos univariantes. El análisis de series temporales comprende una gran variedad de métodos que abarcan desde modelos muy básicos hasta modelos muy complejos como podrían ser modelos no lineales basados en redes neuronales. Para el objeto de este libro, nos centraremos en métodos simples que suelen ser los más utilizados en la industria, como las técnicas: i) Ingenuas (<em>Naïve</em>), ii) Medias móviles y iii) Suavizado exponencial.</p></li>
+<li><p><strong>Métodos causales o Modelos explicativos</strong>: Los métodos causales utilizan más de una variable por ello también se les conoce como multivariantes. En este caso la variable que queremos predecir su valor se expresa en función de otras variables explicativas. Por ejemplo, se podría explicar el consumo de energía eléctrica en función de la temperatura, o las ventas de un producto en función del gasto publicitario. Este tipo de modelos se suelen expresar en forma de regresión, con la única peculiaridad que las variables incluidas en la regresión deben estar ordenadas con respecto al tiempo. Por este motivo, este tipo de regresiones se les denomina <em>regresiones dinámicas</em>.</p></li>
+</ul>
+</li>
+</ol>
+<div id="fig-fig10" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="fig10.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figura&nbsp;1.2: Ejemplos de series temporales.</figcaption></figure>
+</div>
+</section><section id="series-temporales" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="series-temporales">
+<span class="header-section-number">1.3</span> Series temporales</h2>
+<p>La materia prima con la que vamos a contar en este libro son datos procedentes de series temporales extraídas de la realidad, y como tales, con propiedades muy variadas. Como se ha dicho antes, una <strong>serie temporal</strong> es una sucesión de valores de una variables ordenados en el tiempo. La predicción consistirá en obtener los valores futuros de dicha variable. Dicho de este modo, estaríamos tratando la variable como un conjunto de valores dados o deterministas, como si no pudiera haber sido de otro modo. Esto es cierto en casos muy raros, porque la realidad es que las cosas pueden suceder de muchas formas posibles o, al menos, así lo suponemos. Esta concepción se generalizará más tarde cuando tratemos las series temporales como realizaciones de procesos estocásticos.</p>
+<p>Para ser más explícitos, la <a href="#fig-figComps">Figura&nbsp;<span>1.3</span></a> muestra una posible descomposición de una porción de la serie de pasajeros (<a href="#fig-fig10">Figura&nbsp;<span>1.2</span></a>) en <strong>tendencia</strong>, <strong>estacionalidad</strong> y <strong>ruido</strong> (a veces también llamado componente <strong>irregular</strong> o <strong>residuo</strong>).</p>
+<div id="fig-figComps" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="figComps.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figura&nbsp;1.3: Componentes de la serie de pasajeros.</figcaption></figure>
+</div>
+<p>El análisis de series temporales consiste en identificar el patrón de esos datos, es decir, la <em>forma</em> que tienen esos datos a lo largo del tiempo para poder proyectarla en el futuro y utilizar esas proyecciones como predicciones.</p>
+<p>Para identificar el patrón generador de datos, la serie temporal se puede dividir en componentes como nivel promedio, tendencia, estacionalidad y error. La Figura <a href="#fig-figComps">Figura&nbsp;<span>1.3</span></a> muestra la representación gráfica de dichos componentes. De este modo, la serie temporal se puede expresar como la combinación de dichos componentes. Si la forma en que combinamos dichos componentes es <strong>aditiva</strong>, la serie temporal <span class="math inline">\(y(t)\)</span> se podría expresar de la siguiente forma:</p>
+<p><span id="eq-add"><span class="math display">\[
+    y(t)=N+T+S+e
+\tag{1.1}\]</span></span> donde <span class="math inline">\(N\)</span> es el nivel, es decir el valor promedio de la serie distinto de cero, <span class="math inline">\(T\)</span> es la tendencia que representa las variaciones lentas de la serie temporal, por eso también se le conoce como componente de baja frecuencia, <span class="math inline">\(S\)</span> es la estacionalidad y finalmente <span class="math inline">\(e\)</span> es el error aleatorio. Hay que señalar que aunque los principales componentes de una serie temporal vienen definidos en <a href="#eq-add">Ecuación&nbsp;<span>1.1</span></a>, pueden existir otros componentes como variables exógenas y una componente de ciclo, cuyo periodo es diferente de los reflejados en la componente <span class="math inline">\(S\)</span>, como por ejemplo el ciclo económico.</p>
+<p>Entre los componentes de una serie temporal, quizás el que parece menos común es la componente de estacionalidad, la cuál se podría definir como la variación cíclica o periódica alrededor de la tendencia. Un ejemplo de serie temporal con estacionalidad podría ser las ventas de juguetes o de mazapanes. Dichas ventas son mayores durante el mes de diciembre y bajas durante el resto de los meses.</p>
+<p>Otra forma de introducir los componentes es mediante la siguiente expresión <strong>multiplicativa</strong>, tal que:</p>
+<p><span id="eq-mult"><span class="math display">\[
+y(t)=N\cdot T \cdot S \cdot e
+\tag{1.2}\]</span></span></p>
+<p>O una expresión <strong>mixta:</strong> <span id="eq-mixt"><span class="math display">\[
+    y(t)=(N + T) \cdot S + e
+\tag{1.3}\]</span></span> donde las componentes <span class="math inline">\(N\)</span> y <span class="math inline">\(T\)</span> se combinan de forma aditiva, la estacionalidad <span class="math inline">\(S\)</span> de forma multiplicativa y el error <span class="math inline">\(e\)</span> de forma aditiva.</p>
+<p>En este libro nos centraremos en el análisis de la familia de suavizado exponencial para realizar las previsiones. Se eligieron estos procedimientos porque suelen estar disponibles en el software comercial y cumplen los criterios de bajo coste y baja participación de la gerencia.</p>
+<p>A continuación, se expondrán las diferentes versiones de algoritmos pertenecientes a la familia del suavizado exponencial. Cada versión u algoritmo cambia dependiendo de los componentes que contenga la serie temporal a analizar.</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Prólogo</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./07-basicsts.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Conceptos y herramientas básicas</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

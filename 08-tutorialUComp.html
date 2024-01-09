@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Analítica predictiva avanzada - Apéndice B: Tutorial de UComp</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./06-introR.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-tutorialUComp.html">Apéndice B: Tutorial de UComp</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Analítica predictiva avanzada</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prólogo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-basicsts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Conceptos y herramientas básicas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-etsSSOE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Suavizado Exponencial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-etsSSOEenSS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Suavizado exponencial en Espacio de los Estados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-etsMSOE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Suavizado Exponencial con mútiples ruidos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-extensiones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Aplicaciones</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-introR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apéndice A: Introducción a los lenguajes de programación</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-tutorialUComp.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Apéndice B: Tutorial de UComp</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Índice</h2>
+   
+  <ul>
+<li><a href="#objetos-de-series-temporales" id="toc-objetos-de-series-temporales" class="nav-link active" data-scroll-target="#objetos-de-series-temporales">Objetos de series temporales</a></li>
+  <li><a href="#familias-de-modelos-de-ucomp" id="toc-familias-de-modelos-de-ucomp" class="nav-link" data-scroll-target="#familias-de-modelos-de-ucomp">Familias de modelos de <code>UComp</code></a></li>
+  <li><a href="#funciones-de-apoyo-a-la-modelizaci%C3%B3n" id="toc-funciones-de-apoyo-a-la-modelización" class="nav-link" data-scroll-target="#funciones-de-apoyo-a-la-modelizaci%C3%B3n">Funciones de apoyo a la modelización</a></li>
+  <li><a href="#funciones-accesorias-%C3%BAtiles-para-modelizaci%C3%B3n-arima" id="toc-funciones-accesorias-útiles-para-modelización-arima" class="nav-link" data-scroll-target="#funciones-accesorias-%C3%BAtiles-para-modelizaci%C3%B3n-arima">Funciones accesorias útiles para modelización ARIMA</a></li>
+  <li><a href="#bibliograf%C3%ADa" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliograf%C3%ADa">Bibliografía</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">Apéndice B: Tutorial de UComp</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>En este tutorial se explican de forma sucinta los rudimentos básicos para utilizar objetos de series temporales que se usan en la librería <code>UComp</code>, así como el funcionamiento de la librería en sí. No se trata de una documentación exhaustiva, sino de una explicación sucinta de la lógica con la que se ha construido la librería.</p>
+<section id="objetos-de-series-temporales" class="level2"><h2 class="anchored" data-anchor-id="objetos-de-series-temporales">Objetos de series temporales</h2>
+<p>En este libro y en la librería <code>UComp</code> hemos adoptado siempre una versión lo más sencilla posible de tratar objetos con fechas en cada uno de los lenguajes. Se comenta a continuación cada uno de los casos.</p>
+<p>La librería se suministra con tres series temporales que sirven de ejemplo para todos los capítulos del libro. Se trata de <code>airpas</code>, las llegadas mensuales a España de viajeros extranjeros por avión; <code>gdp</code>, el PIB trimestral español en términos reales; e <code>ipi</code>, el índice de producción industrial mensual español.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>En <strong>R</strong> <code>UComp</code> prioriza el uso de objetos tipo <code>ts</code>, aunque también está preparada para recibir objetos tipo <code>tsibble</code>, pero nunca devuelve objetos de esta clase. Con los objetos <code>ts</code> se pueden utilizar las funciones estándar, como son <code>head</code>, <code>tail</code>, <code>window</code>, etc. De hecho, se debe evitar cortar objetos <code>ts</code> con el operador de <em>slicing</em> habitual (<code>:</code>) como si fueran vectores o matrices estándar porque lo que se obtiene como respuesta es un vector o matriz, nunca una serie temporal.</p>
+<p>El siguiente código muestra un ejemplo en el que se genera una serie temporal mensual comenzando en enero de 2000. Se genera una variable <code>yVector</code> que NO es una serie temporal, sino un vector, y otra variable <code>yTs</code> que SÍ se una serie temporal porque se usa el comando <code>window</code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">UComp</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, start<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">1</span><span class="op">)</span>, frequency<span class="op">=</span><span class="fl">12</span><span class="op">)</span></span>
+<span><span class="va">yVector</span> <span class="op">=</span> <span class="va">y</span><span class="op">[</span><span class="fl">10</span> <span class="op">:</span> <span class="fl">21</span><span class="op">]</span></span>
+<span><span class="va">yTs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">y</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2003</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2003</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>En <strong>Python</strong> <code>UComp</code> utiliza objetos de series temporales de <code>pandas</code>, lo que significa que todas las funciones estándar de esa librería se pueden utilizar para su manejo.</p>
+<p>Adicionalmente, y para dar una sensación de uso similar a <strong>R</strong>, se han añadido dos funciones que pueden ser de gran utilidad. Se trata de <code>ts</code> y <code>window</code>.</p>
+<p>El siguiente código muestra un ejemplo en el que se genera una serie temporal mensual comenzando en enero de 2000 y se genera una serie <code>yTs</code> que contiene solo el año 2003.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> UComp <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> ts(np.random.rand(<span class="dv">100</span>), start<span class="op">=</span><span class="st">"2000-01-31"</span>, freq<span class="op">=</span><span class="st">"m"</span>)    </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>yTs <span class="op">=</span> window(y, <span class="st">"2003-01-31"</span>, <span class="st">"2003-12-31"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>En <strong>MATLAB/Octave</strong> no se utilizan objetos de series temporales en la libraría <code>UComp</code>, aunque algunas de las salidas de las funciones sí que devuelven objetos tipo <code>table</code> con índices de filas que son fechas. Esto provoca que el usuario tenga que utilizar reiteradamente en muchas de las funciones el período estacional como entrada. Es necesario estar alerta, porque puede provocar errores.</p>
+</div>
+</div>
+</div>
+</section><section id="familias-de-modelos-de-ucomp" class="level2"><h2 class="anchored" data-anchor-id="familias-de-modelos-de-ucomp">Familias de modelos de <code>UComp</code>
+</h2>
+<p>El nombre de la librería obedece al proyecto inicial que consistía en implementar modelos de componentes no observables de forma automática (<em>Unobserved Components</em> en inglés, ver Pedregal, 2022). Más tarde el proyecto se amplió incluyendo los modelos de suavizado exponencial con una sola fuente de error (<em>Single Source Of Error</em>, SSOE) y los mismos con múltiples fuentes de error (<em>Multiple Sources Of Error</em>, MSOE).</p>
+<p>Los nombres de las funciones y la sintaxis de todas ellas es muy similar, como se puede ver en la <a href="#tbl-modelos">Tabla&nbsp;<span>1</span></a>, en la que se indican los nombres de las funciones principales que se encargan de la modelización para cada uno de las familias de modelos. Los nombres de las funciones indican la acción y van precedidos por un asterisco que puede ser sustituido por <code>ETS</code>, <code>PTS</code> o <code>UC</code> para el suavizado exponencial SSOE, MSOE y componentes no observables, respectivamente.</p>
+<div id="tbl-modelos" class="anchored">
+<table class="table">
+<caption>Tabla&nbsp;1: Funciones principales de <code>UComp</code>.</caption>
+<colgroup>
+<col style="width: 19%">
+<col style="width: 80%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;"><strong>Funciones</strong></th>
+<th style="text-align: left;"><strong>Descripción</strong></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">
+<code>ETS</code>, <code>PTS</code>, <code>UC</code>
+</td>
+<td style="text-align: left;">Corre todas las demás funciones para realizar una modelización completa</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>*model</code></td>
+<td style="text-align: left;">Igual que el anterior, pero solo corre la estimación y predicción para conseguir una ejecución más rápida cuando solo se requiere predicción</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>*components</code></td>
+<td style="text-align: left;">Estima los componentes óptimos de cada familia de modelos</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>*validate</code></td>
+<td style="text-align: left;">Calcula y muestra la tabla de estimación con algunos tests de diagnóstico</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Algunas aclaraciones:</p>
+<ul>
+<li>En todas aquellas situaciones en las que la velocidad de ejecución no sea una restricción, lo más cómodo es ejecutar directamente <code>ETS</code>, <code>PTS</code> o <code>UC</code>.</li>
+<li>La sintaxis de todas las funciones es muy parecida, aunque no idéntica. Los argumentos de entrada comunes a las funciones principales se encuentran en la <a href="#tbl-entradas">Tabla&nbsp;<span>2</span></a>.</li>
+<li>Para los modelos de componentes no observables existen funciones adicionales, <code>UCfilter</code>, <code>UCsmooth</code> y <code>UCdisturb</code> que corren el filtro de Kalman, el algoritmo de suavizado o el algoritmo conocido como <em>disturbance</em> para obtener los valores óptimos de los estados y/o perturbaciones del modelo (ver Pedregal, 2022).</li>
+<li>
+<code>*components</code> y <code>*validate</code> son funciones que admiten de entrada un modelo y devuelven otro modelo, lo habitual será queq el modelo de entrada y salida sean el mismo. En <strong>Python</strong> las funciones <code>components</code> y <code>validate</code> son en realidad métodos de los objetos correspondientes (ver ejemplos más abajo).</li>
+</ul>
+<div id="tbl-entradas" class="anchored">
+<table class="table">
+<caption>Tabla&nbsp;2: Argumentos de entrada comunes a <code>ETS</code>, <code>PTS</code>, <code>UC</code>, <code>ETSmodel</code>, <code>PTSmodel</code> y <code>UCmodel</code>.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 83%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;"><strong>Nombre</strong></th>
+<th style="text-align: left;"><strong>Descripción</strong></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>y</code></td>
+<td style="text-align: left;">Serie temporal univariante. Es el único argumento de entrada obligatorio. Si es un vector sin fechas, el argumento <code>s</code> también será obligatorio</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>s</code></td>
+<td style="text-align: left;">Periodo estacional, número de observaciones por año. En <strong>MATLAB/Octave</strong> es una entrada obligatoria, puesto que en ese caso <code>y</code> es un vector</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>u</code></td>
+<td style="text-align: left;">Matriz de variables exógenas de entrada.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>model</code></td>
+<td style="text-align: left;">Modelo que se desea estimar. Si no se especifica ninguno concreto se identifica el mejor de entre todos los modelos disponibles dentro de cada familia. Ver la ayuda para familiarizarse con las posibilidades en cada caso</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>h</code></td>
+<td style="text-align: left;">Horizonte de predicción</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>criterion</code></td>
+<td style="text-align: left;">Criterio de información para identificación automática. Puede ser <code>aic</code>, <code>bic</code> o <code>aicc</code>
+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>lambda</code></td>
+<td style="text-align: left;">Parámetro <span class="math inline">\(\lambda\)</span> de la transformación Box-Cox. <code>NULL</code> or <code>NaN</code> para estimarlo</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>armaIdent</code></td>
+<td style="text-align: left;">Identificación de modelos con ruido ARMA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>verbose</code></td>
+<td style="text-align: left;">Muestra resultados intermedios a medida que se identifica o se estiman los modelos</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>El término <code>lambda</code> es una palabra reservada en <strong>Python</strong>, por lo que dicho argumento se llama <code>lambdaBoxCox</code>.</p>
+<p>Los modelos <code>ETS</code> cuentan además con dos parámetros adicionales para la estimación de intervalos de confianza mediante simulación <em>bootstrap</em>, se trata de <code>bootstrap</code> y <code>nSimul</code>.</p>
+<p>Los modelos <code>UC</code> permiten la identificación automática de atípicos mediante la entrada <code>outlier</code> que indica el número de desviaciones típicas a partir del cual se analiza si los residuos que lo sobrepasan son o no atípicos.</p>
+<p>La salida de las funciones es un objeto (lista o estructura) con una serie de campos. Los más habituales se muestran en la <a href="#tbl-salidas">Tabla&nbsp;<span>3</span></a>.</p>
+<div id="tbl-salidas" class="anchored">
+<table class="table">
+<caption>Tabla&nbsp;3: Argumentos de salida comunes a <code>ETS</code>, <code>PTS</code>, <code>UC</code>.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 83%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;"><strong>Nombre</strong></th>
+<th style="text-align: left;"><strong>Descripción</strong></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>yFor</code></td>
+<td style="text-align: left;">Vector de predicciones óptimas</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>yForV</code></td>
+<td style="text-align: left;">Varianza de predicciones para intervalos de confianza</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>comp</code></td>
+<td style="text-align: left;">Componentes estimados</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A continuación se muestran algunos ejemplos sencillos de las funciones anteriores.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Ejemplo</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Estimación de un modelo ETS y PTS para la serie de pasajeros de avión españoles con los datos transformados en logaritmos desde 2008 hasta diciembre de 2018. Las predicciones se estiman para el año 2019 (<code>h</code>) y se muestra la tabla de estimación del modelo ETS, así como los resultados intermedios (<code>verbose</code>).</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>--------------------------------------------------------
+    Model            AIC           BIC          AICc
+--------------------------------------------------------
+   (A,N,N):        0.9397        0.9834        0.9397
+   (A,N,A):       -1.6453       -1.3177       -1.6150
+   (A,A,N):        0.9697        1.0570        0.9697
+   (A,A,A):       -1.6208       -1.2495       -1.5829
+  (A,Ad,N):        0.9835        1.0927        0.9835
+  (A,Ad,A):       -1.6027       -1.2096       -1.5573
+   (M,N,N):        0.9400        0.9837        0.9400
+   (M,N,A):       -1.6297       -1.3021       -1.5994
+   (M,N,M):       -1.6182       -1.2906       -1.5879
+   (M,A,N):        0.9691        1.0565        0.9691
+   (M,A,A):       -1.6051       -1.2339       -1.5673
+   (M,A,M):       -1.5937       -1.2225       -1.5558
+  (M,Ad,N):        0.9824        1.0915        0.9824
+  (M,Ad,A):       -1.6224       -1.2293       -1.5770
+  (M,Ad,M):       -1.6153       -1.2222       -1.5698
+--------------------------------------------------------
+  Identification time:    0.08300 seconds
+--------------------------------------------------------
+ -------------------------------------------------------------
+  Model: ETS(A,N,A)
+  Box-Cox lambda: 1.00
+  Q-Newton: Gradient convergence.
+ -------------------------------------------------------------
+                   Param        S.E.          |T|     |Grad|
+ -------------------------------------------------------------
+      Alpha:       0.8060     0.0827       9.7450  1.382e-10
+      Gamma:    1.000e-08  1.285e-02       0.0000  6.848e-13
+ -------------------------------------------------------------
+   AIC:      -1.6453   BIC:      -1.3177   AICc:      -1.6150
+            Log-Likelihood:     123.5892
+ -------------------------------------------------------------
+    Summary statistics:
+ -------------------------------------------------------------
+         Missing data:      
+         Q( 1):       0.0008         Q( 4):       5.1667
+         Q( 8):      21.5931         Q(12):      33.3406
+   Bera-Jarque:      90.3046       P-value:       0.0000
+       H(  46):       0.5186       P-value:       0.0281
+   Outliers (&gt;2.7 ES):     4
+         Q( 1):       0.4329         Q( 4):       1.0481
+         Q( 8):      14.7442         Q(12):      37.5224
+   Bera-Jarque:       4.8024       P-value:       0.0906
+       H(  44):       0.4644       P-value:       0.0124
+ -------------------------------------------------------------</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>------------------------------------------------------------
+ Identification of PTS models:
+------------------------------------------------------------
+    Model            AIC           BIC          AICc
+------------------------------------------------------------
+  (N,N,N):       -1.0470       -1.0033       -1.0470
+  (A,N,N):       -0.1044       -0.0389       -0.1044
+  (N,N,L):       -2.7776       -2.4500       -2.7473
+  (A,N,L):       -2.7854       -2.4360       -2.7551
+  (N,N,D):       -2.6872       -2.2504       -2.6341
+  (A,N,D):       -2.7559       -2.2972       -2.6953
+  (N,A,N):       -0.8857       -0.7983       -0.8857
+  (A,A,N):       -0.1134       -0.0042       -0.1134
+  (N,A,L):       -2.6685       -2.2972       -2.6306
+  (A,A,L):       -2.6834       -2.2903       -2.6380
+  (N,A,D):       -2.5964       -2.1160       -2.5283
+  (A,A,D):       -2.7185       -2.2162       -2.6427
+ (N,Ad,N):       -0.9647       -0.8773       -0.9647
+ (A,Ad,N):       -0.1642       -0.0550       -0.1642
+ (N,Ad,L):       -2.7473       -2.3760       -2.7094
+ (A,Ad,L):       -2.7588       -2.3657       -2.7134
+ (N,Ad,D):       -2.6737       -2.1932       -2.6055
+ (A,Ad,D):       -2.7955       -2.2932       -2.7198
+------------------------------------------------------------
+  Identification time:    1.52861 seconds
+------------------------------------------------------------
+-------------------------------------------------------------
+  Box-Cox lambda: 1.00
+  Model: (A,N,L)
+  Periods: 
+  Q-Newton: Function convergence
+  (*)  concentrated out parameters
+ -------------------------------------------------------------
+                      Param   asymp.s.e.        |T|     |Grad| 
+ -------------------------------------------------------------
+        Level:     8.30e-04*  
+         Seas:     1.23e-05     2.03e-05     0.6034   5.37e-05
+    Irregular:     1.81e-04     8.33e-05     2.1778   6.90e-05
+ -------------------------------------------------------------
+   AIC:      -2.7854   BIC:      -2.4360   AICc:      -2.7551
+            Log-Likelihood:     199.8394
+ -------------------------------------------------------------
+    Summary statistics:
+ -------------------------------------------------------------
+         Missing data:      
+         Q( 1):       0.2597         Q( 4):       8.0362
+         Q( 8):      28.0654         Q(12):      47.5452
+   Bera-Jarque:      10.7759       P-value:       0.0046
+       H(  40):       0.6375       P-value:       0.1588
+   Outliers (&gt;2.7 ES):     4
+         Q( 1):       0.3479         Q( 4):       7.8717
+         Q( 8):      26.9195         Q(12):      52.1301
+   Bera-Jarque:       5.0253       P-value:       0.0811
+       H(  40):       0.3787       P-value:       0.0027
+ -------------------------------------------------------------</code></pre>
+</div>
+</div>
+<p>Los componentes estimados del modelo ETS se muestran a continuación, así como los valores reales junto con ambas predicciones y los intervalos de confianza al 95% del modelo PTS.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Borrando memoria</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Cargando librerías</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">UComp</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="co"># Cortando serie temporal</span></span>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">airpas</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2008</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Estimando modelos</span></span>
+<span><span class="va">mETS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">y</span>, h<span class="op">=</span><span class="fl">12</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">mPTS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/PTS.html">PTS</a></span><span class="op">(</span><span class="va">y</span>, h<span class="op">=</span><span class="fl">12</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># Gráficos de componentes</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mETS</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mPTS</span><span class="op">)</span></span>
+<span><span class="co"># Gráficos de predicciones</span></span>
+<span><span class="va">predicciones</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">mETS</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span>,</span>
+<span>                     <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">mPTS</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span>,</span>
+<span>                     <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">mPTS</span><span class="op">$</span><span class="va">yFor</span> <span class="op">-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">mPTS</span><span class="op">$</span><span class="va">yForV</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>                     <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">mPTS</span><span class="op">$</span><span class="va">yFor</span> <span class="op">+</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">mPTS</span><span class="op">$</span><span class="va">yForV</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">airpas</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2019</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="va">predicciones</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargando librerías</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> UComp <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Cortando serie temporal</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.log(window(airpas, <span class="st">"2008-01-31"</span>, <span class="st">"2018-12-31"</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimando modelos</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>mETS <span class="op">=</span> ETS(y, h<span class="op">=</span><span class="dv">12</span>, verbose<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>mPTS <span class="op">=</span> PTS(y, h<span class="op">=</span><span class="dv">12</span>, verbose<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de componentes</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>mETS.plot()</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>mPTS.plot()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de predicciones</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>predicciones <span class="op">=</span> pd.concat((np.exp(mETS.yFor),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                     np.exp(mPTS.yFor),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                     np.exp(mPTS.yFor <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> np.sqrt(mPTS.yForV)), </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                     np.exp(mPTS.yFor <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> np.sqrt(mPTS.yForV))),</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                     axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>plt.plot(window(airpas, <span class="st">"2018-01-31"</span>, <span class="st">"2019-12-31"</span>))</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>plt.plot(predicciones)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Borrando memoria</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>clear <span class="bu">all</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>load data</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Cortando serie temporal</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> log(airpas(<span class="dv">39</span> <span class="op">*</span> <span class="dv">12</span> <span class="op">+</span> <span class="dv">1</span> : <span class="dv">50</span> <span class="op">*</span> <span class="dv">12</span>))<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimando modelos</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>mETS <span class="op">=</span> ETS(y, <span class="dv">12</span>, h<span class="op">=</span><span class="dv">12</span>, verbose<span class="op">=</span>true)<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>mPTS <span class="op">=</span> PTS(y, <span class="dv">12</span>, h<span class="op">=</span><span class="dv">12</span>, verbose<span class="op">=</span>true)<span class="op">;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de componentes</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>stackedplot(mETS.comp)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>stackedplot(mPTS.comp)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de predicciones</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> (<span class="dv">49</span> <span class="op">*</span> <span class="dv">12</span> <span class="op">+</span> <span class="dv">1</span> : <span class="dv">51</span> <span class="op">*</span> <span class="dv">12</span>)<span class="op">;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> (<span class="dv">50</span> <span class="op">*</span> <span class="dv">12</span> <span class="op">+</span> <span class="dv">1</span> : <span class="dv">51</span> <span class="op">*</span> <span class="dv">12</span>)<span class="op">;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>predicciones <span class="op">=</span> [exp(mETS.yFor) exp(mPTS.yFor) ...</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                exp(mPTS.yFor <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> sqrt(mPTS.yForV)) ...</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>                exp(mPTS.yFor <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> sqrt(mPTS.yForV))]<span class="op">;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>plot(t, airpas(t), tf, predicciones)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="funciones-de-apoyo-a-la-modelización" class="level2"><h2 class="anchored" data-anchor-id="funciones-de-apoyo-a-la-modelización">Funciones de apoyo a la modelización</h2>
+<p>La <a href="#tbl-diag">Tabla&nbsp;<span>5</span></a> muestra una serie de funciones que ayudan en el diagnóstico de los modelos. Estas funciones se encuentran disponibles en <strong>R</strong> y <strong>Python</strong>. En <strong>MATLAB</strong> es recomendable utilizar la función <code>toolTEST</code> de la toolbox <code>ECOTOOL</code>, ver Pedregal (2019).</p>
+<div id="tbl-diag" class="anchored">
+<table class="table">
+<caption>Tabla&nbsp;4: Funciones de apoyo a la modelización disponibles en <strong>R</strong> y <strong>Python</strong>.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 83%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;"><strong>Nombre</strong></th>
+<th style="text-align: left;"><strong>Descripción</strong></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>tests</code></td>
+<td style="text-align: left;">Corre <code>sumStats</code>, <code>gaussTest</code>, <code>ident</code>, <code>cusum</code> y <code>varTest</code>, y muestra un resumen gráfico</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>sumStats</code></td>
+<td style="text-align: left;">Estadísticos descriptivos de un conjunto de series temporales</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>gaussTest</code></td>
+<td style="text-align: left;">Tests gráficos y formales de normalidad. Shapiro-Wilks, QQ-plot e histograma con distribución normal teórica además de estimación no paramétrica de la distribución empírica</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ident</code></td>
+<td style="text-align: left;">Autocorrelograma simple y parcial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>cusum</code></td>
+<td style="text-align: left;">Tests CUSUM de constancia de la media y CUSUM <em>squared</em> para constancia de la varianza</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>varTest</code></td>
+<td style="text-align: left;">Test de igualdad de varianzas</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>tsDisplay</code></td>
+<td style="text-align: left;">Muestra un gráfico de la serie junto con los autocorrelogramas</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>En <strong>R</strong> se han implementado algunas funciones adicionales complementarias: <code>size</code> para calcula el tamaño de un objeto, <code>residuals</code> para extraer los residuos de un modelo, <code>colMedians</code> y <code>rowMedians</code> para calcular la mediana de una matriz por columnas o filas, y <code>plus_one</code> para calcular la fecha siguiente a la última observación de un objeto <code>ts</code>.</p>
+<p>Adicionalmente, existen otras tres funciones que proporcionan comparaciones predictivas de modelos:</p>
+<ul>
+<li>
+<code>slide</code>: produce <code>h</code> predicciones recursivas con un conjunto de modelos implementados en una función definida por el usuario (entrada <code>forecFun</code>). Las predicciones se calculan comenzando en un origen inicial (<code>orig</code>), que se va incrementando en cada iteración en un número de observaciones dadas por <code>step</code>. Es posible utilizar ventanas de dimensión fija mediante la entrada <code>window</code> y es posible utilizar computación en paralelo (<code>parallel</code>). La función devuelve una hiper-matriz de dimensiones <span class="math inline">\(h \times \text{nOrigen} \times \text{nModelos} \times \text{nSeries}\)</span>, donde nOrigen, nModelos y nSeries son el número de orígenes, de modelos y de series que intervienen en la estimación.</li>
+<li>
+<code>plotSlide</code>: representa gráficamente los errores de predicción estimados con <code>slide</code>.</li>
+<li>
+<code>Accuracy</code>: Estima determinadas métricas de error para un conjunto de series temporales y varios modelos alternativos. Las métricas son la media de los errores, la raíz cuadrada del error cuadrático medio (RMSE), la media del error absoluto (MAE) y los equivalentes porcentuales. También se incluye el MAPE simétrico (sMAPE), el error escalado absoluto medio (MASE), el MAE relativo (relMAE) y el estadístico U the Theil.</li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Ejemplo</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>La tabla siguiente muestra las métricas de error estimadas con <code>Accuracy</code> de las predicciones dos años hacia adelante del PIB español con origen en el último trimestre del año 2018 con los modelos naive y UC.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>             ME     RMSE      MAE      MPE    PRMSE     MAPE    sMAPE     MASE
+naive  7.568453 10.91430 8.026720 7.909775 11.84212 8.313688 7.684942 3.022146
+m$yFor 7.624897 11.76952 7.675075 8.021094 12.85615 8.068054 7.335188 2.889748
+          RelMAE Theil's U
+naive  0.2627953  1.338894
+m$yFor 0.2512825  1.453542</code></pre>
+</div>
+</div>
+<p>Las predicciones se representan a continuación, junto con los valores reales.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Las tablas de salida y la evidencia gráfica de todos los tests de diagnóstico se muestran a continuación (<code>tests</code>):</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary statistics:
+==================
+                       Serie 1
+Data points:          81.00000
+Missing:               0.00000
+Minimum:              -3.40839
+1st quartile:         -0.36312
+Mean:                  0.13931
+P(Mean = 0):           0.22916
+Median:                0.22881
+3rd quartile:          0.64080
+Maximum:               2.93774
+Interquartile range:   1.00392
+Range:                 6.34613
+Satandard deviation:   1.03468
+Variance:              1.07056
+Skewness:             -0.65851
+Kurtosis:              2.28973
+Autocorrelation tests:
+=====================
+     SACF sa     LB p.val  SPACF sp
+1   0.028  .  0.066 0.797  0.028  .
+2  -0.117  .  1.225 0.542 -0.118  .
+3   0.028  .  1.292 0.731  0.035  .
+4   0.038  .  1.419 0.841  0.023  .
+5  -0.196  .  4.818 0.439 -0.194  .
+6   0.031  .  4.905 0.556  0.054  .
+7   0.013  .  4.921 0.670 -0.038  .
+8  -0.083  .  5.550 0.697 -0.069  .
+9  -0.053  .  5.814 0.758 -0.038  .
+10  0.061  .  6.166 0.801  0.007  .
+11 -0.052  .  6.428 0.843 -0.051  .
+12  0.041  .  6.593 0.883  0.057  .
+13  0.054  .  6.876 0.908  0.012  .
+14 -0.068  .  7.340 0.921 -0.080  .
+15  0.104  .  8.439 0.905  0.149  .
+16  0.072  .  8.970 0.915  0.010  .
+17 -0.023  .  9.028 0.939  0.014  .
+18 -0.120  . 10.575 0.912 -0.099  .
+19  0.077  . 11.210 0.917  0.049  .
+20 -0.049  . 11.473 0.933 -0.035  .
+Gaussianity tests:
+=================
+
+    Shapiro-Wilk normality test
+
+data:  x
+W = 0.94979, p-value = 0.003113
+
+Ratio of variance tests:
+=======================
+ Portion_of_data F_statistic p.value
+         0.33333      0.6538   0.285</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Cortando serie temporal</span></span>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">gdp</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Predicciones</span></span>
+<span><span class="va">naive</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">y</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">8</span><span class="op">)</span>, start<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2019</span>, <span class="fl">1</span><span class="op">)</span>, frequency<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/UC.html">UC</a></span><span class="op">(</span><span class="va">y</span>, h<span class="op">=</span><span class="fl">8</span><span class="op">)</span></span>
+<span><span class="co"># Métricas de error</span></span>
+<span><span class="va">py</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">naive</span>, <span class="va">m</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/Accuracy.html">Accuracy</a></span><span class="op">(</span><span class="va">py</span>, <span class="va">gdp</span><span class="op">)</span></span>
+<span><span class="co"># Gráfico de predicciones</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">gdp</span>, <span class="fl">24</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="va">py</span><span class="op">)</span></span>
+<span><span class="co"># Diagnóstico</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/tests.html">tests</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cortando serie temporal</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> window(gdp, end <span class="op">=</span> <span class="st">"2018-12-31"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicciones</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>naive <span class="op">=</span> ts(y[<span class="op">-</span><span class="dv">1</span>].repeat(<span class="dv">8</span>), start<span class="op">=</span><span class="st">"2019-01-31"</span>, freq<span class="op">=</span><span class="st">"q"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> UC(y, h<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Métricas de error</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>py <span class="op">=</span> pd.concat((naive, m.yFor), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>Accuracy(py, gdp)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de predicciones</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>plt.plot(gdp[<span class="op">-</span><span class="dv">24</span>:])</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>plt.plot(py)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnóstico</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>tests(m)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Cargando datos</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>load data</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Cortando serie temporal</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> gdp(<span class="dv">1</span> : <span class="dv">96</span>)<span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Predicciones</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>naive <span class="op">=</span> repmat(y(end), <span class="dv">8</span>, <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> UC(y, <span class="dv">12</span>, h<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Métricas de error</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>py <span class="op">=</span> [naive m.yFor]<span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>Accuracy(py, gdp(<span class="dv">97</span> : <span class="dv">104</span>))</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Gráfico de predicciones</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> (<span class="dv">80</span> : length(gdp))<span class="st">';</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="er">plot</span>(t, gdp(t), (<span class="dv">97</span> : <span class="dv">104</span>), py)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Diagnóstico</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>toolTEST(m.v)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Ejemplo</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>La figura siguiente muestra las métricas de error de la predicción recursiva del PIB español con un origen inicial en el último trimestre de 2014 y acabando en el último cuatrimestre de 2019 con ayuda de las funciones <code>slide</code> y <code>plotSlide</code>. Los modelos utilizados son <em>naive</em> y UC.</p>
+<p>Para poder realizar este gráfico es necesario crear previamente una función <code>predice</code> que compute las predicciones 8 periodos hacia adelante con un modelo <em>naive</em> y un UC. Esta función debe tener dos entradas: una serie temporal y el horizonte de predicción.</p>
+<p>Además es necesario otra función <code>MAE</code> que calcule el error medio absoluto en función de dos entradas: la predicción de un modelo <code>h</code> periodos hacia adelante y una serie temporal sobre la que se estimaron dichas predicciones.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># función predice</span></span>
+<span><span class="va">predice</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span>, <span class="va">h</span><span class="op">=</span><span class="fl">8</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/UC.html">UC</a></span><span class="op">(</span><span class="va">y</span>, h<span class="op">=</span><span class="fl">8</span><span class="op">)</span></span>
+<span>  <span class="va">naive</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">y</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">8</span><span class="op">)</span>, start<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yFor</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, freq<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html">frequency</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">naive</span>, <span class="va">m</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co"># Función MAE</span></span>
+<span><span class="va">MAE</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">py</span>, <span class="va">y</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="va">h</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">py</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">py</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">h</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">:</span> <span class="va">h</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co"># Cortando serie</span></span>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">gdp</span>, end<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2019</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">h</span> <span class="op">=</span> <span class="fl">8</span></span>
+<span><span class="va">step</span> <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="co"># Predicción recursiva</span></span>
+<span><span class="va">orig</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">y</span>, end<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2014</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">predicciones</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/slide.html">slide</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">orig</span>, <span class="va">predice</span>, h<span class="op">=</span><span class="va">h</span>, step<span class="op">=</span><span class="va">step</span><span class="op">)</span></span>
+<span><span class="co"># Gráfico</span></span>
+<span><span class="va">errores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/plotSlide.html">plotSlide</a></span><span class="op">(</span><span class="va">predicciones</span>, <span class="va">y</span>, <span class="va">orig</span>, <span class="va">step</span>, <span class="va">MAE</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># función predice</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>def <span class="fu">predice</span>(y, <span class="at">h=</span><span class="dv">8</span>)<span class="sc">:</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">=</span> <span class="fu">UC</span>(y, <span class="at">h=</span><span class="dv">8</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  naive <span class="ot">=</span> <span class="fu">ts</span>(y[<span class="sc">-</span><span class="dv">1</span>]<span class="fu">.repeat</span>(<span class="dv">8</span>), <span class="at">start=</span>m.yFor.index[<span class="dv">0</span>], <span class="at">freq=</span><span class="st">"q"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  return <span class="fu">pd.concat</span>((naive, m.yFor), <span class="at">axis=</span><span class="dv">1</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Función MAE</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>def <span class="fu">MAE</span>(py, y)<span class="sc">:</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">=</span> py.shape[<span class="dv">0</span>]</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  return <span class="fu">np.cumsum</span>(<span class="fu">abs</span>(py <span class="sc">-</span> y[<span class="sc">-</span>h<span class="sc">:</span>])) <span class="sc">/</span> <span class="fu">np.arange</span>(<span class="dv">1</span>, h <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Cortando serie</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">window</span>(gdp, <span class="at">end=</span><span class="st">"2019-12-31"</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>h <span class="ot">=</span> <span class="dv">8</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>step <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción recursiva</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>orig <span class="ot">=</span> <span class="fu">window</span>(y, <span class="at">end=</span><span class="st">"2014-12-31"</span>).shape[<span class="dv">0</span>]</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>predicciones <span class="ot">=</span> <span class="fu">slide</span>(y, orig, predice, <span class="at">h=</span>h, <span class="at">step=</span>step)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>errores <span class="ot">=</span> <span class="fu">plotSlide</span>(predicciones, y, orig, step, MAE)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>% función predice</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span> salida <span class="ot">=</span> <span class="fu">predice</span>(y, s, h)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">=</span> <span class="fu">UC</span>(y, <span class="dv">4</span>, <span class="at">h=</span><span class="dv">8</span>);</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  naive <span class="ot">=</span> <span class="fu">repmat</span>(<span class="fu">y</span>(end), <span class="dv">8</span>);</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  salida <span class="ot">=</span> [naive m.yFor];</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>end</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>% Función MAE</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span> salida <span class="ot">=</span> <span class="fu">MAE</span>(py, y, s)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">=</span> <span class="fu">length</span>(py);</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  salida <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">abs</span>(py <span class="sc">-</span> <span class="fu">y</span>(end <span class="sc">-</span> h <span class="sc">+</span> <span class="dv">1</span> <span class="sc">:</span> end))) .<span class="sc">/</span> (<span class="dv">1</span> <span class="sc">:</span> h)<span class="st">';</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="st">end</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="st">% Cortando serie</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="st">y = gdp(1 : 100);</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="st">h = 8;</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="st">step = 1;</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="st">% Predicción recursiva</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="st">orig = 80;</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="st">predicciones = slide(y, 4, orig, @predice, h=h, step=step);</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="st">% Gráfico</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="st">errores = plotSlide(predicciones, y, 4, orig, step, @MAE);</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="funciones-accesorias-útiles-para-modelización-arima" class="level2"><h2 class="anchored" data-anchor-id="funciones-accesorias-útiles-para-modelización-arima">Funciones accesorias útiles para modelización ARIMA</h2>
+<p>La libraría incluye además una serie de funciones que son de utilidad en la modlización ARIMA. En este momento <code>UComp</code> no incluye la modelización ARIMA específicamente, pero sí que los ruidos ARMA sí que se premiten en las familias de modelos implementadas.</p>
+<div id="tbl-diag" class="anchored">
+<table class="table">
+<caption>Tabla&nbsp;5: Funciones de apoyo a la modelización ARIMA.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 83%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;"><strong>Nombre</strong></th>
+<th style="text-align: left;"><strong>Descripción</strong></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>armaFilter</code></td>
+<td style="text-align: left;">Filtra una señal por un filtro digital tipo ARMA. En <strong>MATLAB/Octave</strong> se usa <code>filter</code>
+</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>dif</code></td>
+<td style="text-align: left;">Aplica diferencias regulares y estacionales a una serie temporal. La función en <strong>MATLAB</strong> se llama <code>vdif</code>
+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>roots</code></td>
+<td style="text-align: left;">Calcula las raíces de un polinomio en el operador retardo</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>conv</code></td>
+<td style="text-align: left;">Calcula la convolución (producto) de polinomios en el operador retardo</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>acft</code></td>
+<td style="text-align: left;">Calcula las funciones de autocorrelación simple y parcial teóricas de procesos ARMA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>zplane</code></td>
+<td style="text-align: left;">Representa raíces de modelos ARMA en el plano complejo</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Ejemplo</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<p>La siguiente figura muestra el aspecto de una simulación del proceso ARIMA<span class="math inline">\((1, 1, 0) \times (1, 1, 1)\)</span> <span class="math inline">\((1-B)(1-B^4)(1-0.8B^4)y_t=(1-0.8B)(1+0.8B^4)a_t\)</span>, donde <span class="math inline">\(a_t\)</span> es ruido blanco de longitud 100 y <span class="math inline">\(B\)</span> es el operador retardo de forma que <span class="math inline">\(B^ly_t=y_{t-l}\)</span>. La serie tiene estacionalidad de periodo 4 y es no estacionaria en su parte regular y estacional, de tal forma que una diferencia regular y otra estacional producirían un proceso estacionario.</p>
+<p>Un punto interesante es que, para eliminar el efecto de las condiciones iniciales es conveniente hacer una simulación más larga de lo deseada y cortar las últimas observaciones.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>La siguiente figura muestra que la primera diferencia regular y estacional es estacionaria, además de mostrar una fuerte estacionalidad.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Las funciones empíricas son bastante parecidas a las teóricas calculadas con <code>acft</code> para el proceso ARMA estacionario, como se muestra comparando la figura anterior con la siguiente.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Dado que el modelo es invertible, las raíces del numerador tienen un módulo inferior a la unidad, mientras que el denominador muestra numerosas raíces fuera del círculo unidad, junto con otras múltiples dentro.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  0.6687403+0.6687403i -0.6687403+0.6687403i -0.6687403-0.6687403i
+[4]  0.8000000+0.0000000i  0.6687403-0.6687403i</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  0.0000000+0.9457416i -0.9457416-0.0000000i  0.0000000-0.9457416i
+[4]  1.0000000-0.0000000i  0.0000000+1.0000000i -1.0000000-0.0000000i
+[7]  0.0000000-1.0000000i  0.9457416+0.0000000i  1.0000000+0.0000000i</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="08-tutorialUComp_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Simulación</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">105</span><span class="op">)</span></span>
+<span><span class="va">a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span></span>
+<span><span class="va">numerador</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/conv.html">conv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">0.8</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">denominador</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/conv.html">conv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">0.8</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/armaFilter.html">armaFilter</a></span><span class="op">(</span><span class="va">numerador</span>, <span class="va">denominador</span>, <span class="va">a</span><span class="op">)</span> <span class="op">+</span> <span class="fl">300</span></span>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">y</span>, <span class="fl">101</span>, <span class="fl">200</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
+<span><span class="co"># Diferencias</span></span>
+<span><span class="va">dy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/dif.html">dif</a></span><span class="op">(</span><span class="va">y</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/tsDisplay.html">tsDisplay</a></span><span class="op">(</span><span class="va">dy</span><span class="op">)</span></span>
+<span><span class="co"># Funciones de autocorrelación simple y parcial teóricas</span></span>
+<span><span class="va">salida</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/acft.html">acft</a></span><span class="op">(</span><span class="va">numerador</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">0.8</span><span class="op">)</span>, <span class="fl">25</span><span class="op">)</span></span>
+<span><span class="co"># Raíces de los polinomios y plano imaginario</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/roots.html">roots</a></span><span class="op">(</span><span class="va">numerador</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/roots.html">roots</a></span><span class="op">(</span><span class="va">denominador</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/zplane.html">zplane</a></span><span class="op">(</span><span class="va">numerador</span>, <span class="va">denominador</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulación</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">200</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>numerador <span class="op">=</span> conv([<span class="dv">1</span>, <span class="op">-</span><span class="fl">0.8</span>], [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.8</span>])<span class="op">;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>denominador <span class="op">=</span> conv(conv([<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>]), [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="op">-</span><span class="fl">0.8</span>])<span class="op">;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> armaFilter(numerador, denominador, a) <span class="op">+</span> <span class="dv">300</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> ts(y[<span class="dv">100</span>:], freq<span class="op">=</span><span class="st">"q"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>plt.plot(y)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Diferencias</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>dy <span class="op">=</span> dif(y, [<span class="dv">1</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">4</span>])</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>tsDisplay(dy)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Funciones de autocorrelación simple y parcial teóricas</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>salida <span class="op">=</span> acft(numerador, [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="op">-</span><span class="fl">0.8</span>], <span class="dv">25</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Raíces de los polinomios y plano imaginario</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(roots(numerador))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(roots(denominador))</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>zplane(numerador, denominador)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Simulación</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> randn(<span class="dv">100</span>)<span class="op">;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>numerador <span class="op">=</span> conv([<span class="dv">1</span> <span class="op">-</span><span class="fl">0.8</span>], [<span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="fl">0.8</span>])<span class="op">;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>denominador <span class="op">=</span> conv(conv([<span class="dv">1</span> <span class="op">-</span><span class="dv">1</span>], [<span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="op">-</span><span class="dv">1</span>]), [<span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="op">-</span><span class="fl">0.8</span>])<span class="op">;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="bu">filter</span>(numerador, denominador, a) <span class="op">+</span> <span class="dv">300</span><span class="op">;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>toolTEST(y)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Diferencias</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>dy <span class="op">=</span> vdif(y, [<span class="dv">1</span> <span class="dv">1</span>], [<span class="dv">1</span> <span class="dv">4</span>])<span class="op">;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>toolTEST(dy)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Funciones de autocorrelación simple y parcial teóricas</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>acft(numerador, [<span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="op">-</span><span class="fl">0.8</span>], <span class="dv">25</span>, <span class="dv">4</span>)<span class="op">;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Raíces de los polinomios y plano imaginario</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>roots(numerador)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>roots(denominador)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>close <span class="bu">all</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>zplane(numerador, denominador)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="bibliografía" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="bibliografía">Bibliografía</h2>
+<p>Pedregal, D. J. (2022). Automatic Identification and Forecasting of Structural Unobserved Components Models with UComp. Journal of Statistical Software, 103(1), 1–33. https://doi.org/10.18637/jss.v103.i09</p>
+<p>Pedregal DJ (2019) Time series analysis and forecasting with ECOTOOL. PLOS ONE 14(10): e0221238. https://doi.org/10.1371/journal.pone.0221238</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./06-introR.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Apéndice A: Introducción a los lenguajes de programación</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

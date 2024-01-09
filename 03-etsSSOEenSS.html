@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Analítica predictiva avanzada - 4&nbsp; Suavizado exponencial en Espacio de los Estados</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04-etsMSOE.html" rel="next">
+<link href="./02-etsSSOE.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-etsSSOEenSS.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Suavizado exponencial en Espacio de los Estados</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Analítica predictiva avanzada</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prólogo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-basicsts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Conceptos y herramientas básicas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-etsSSOE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Suavizado Exponencial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-etsSSOEenSS.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Suavizado exponencial en Espacio de los Estados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-etsMSOE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Suavizado Exponencial con mútiples ruidos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-extensiones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Aplicaciones</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-introR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apéndice A: Introducción a los lenguajes de programación</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-tutorialUComp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apéndice B: Tutorial de UComp</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Índice</h2>
+   
+  <ul>
+<li><a href="#modelos-ssoe-de-espacio-de-los-estados" id="toc-modelos-ssoe-de-espacio-de-los-estados" class="nav-link active" data-scroll-target="#modelos-ssoe-de-espacio-de-los-estados"><span class="header-section-number">4.1</span> Modelos SSOE de Espacio de los Estados</a></li>
+  <li><a href="#modelos-de-suavizado-exponencial-en-forma-de-espacio-de-los-estados" id="toc-modelos-de-suavizado-exponencial-en-forma-de-espacio-de-los-estados" class="nav-link" data-scroll-target="#modelos-de-suavizado-exponencial-en-forma-de-espacio-de-los-estados"><span class="header-section-number">4.2</span> Modelos de suavizado exponencial en forma de Espacio de los Estados</a></li>
+  <li>
+<a href="#estimaci%C3%B3n" id="toc-estimación" class="nav-link" data-scroll-target="#estimaci%C3%B3n"><span class="header-section-number">4.3</span> Estimación</a>
+  <ul class="collapse">
+<li><a href="#el-principio-de-m%C3%A1xima-verosimilitud" id="toc-el-principio-de-máxima-verosimilitud" class="nav-link" data-scroll-target="#el-principio-de-m%C3%A1xima-verosimilitud"><span class="header-section-number">4.3.1</span> El principio de Máxima Verosimilitud</a></li>
+  <li><a href="#estimaci%C3%B3n-mv-de-modelos-de-espacio-de-los-estados" id="toc-estimación-mv-de-modelos-de-espacio-de-los-estados" class="nav-link" data-scroll-target="#estimaci%C3%B3n-mv-de-modelos-de-espacio-de-los-estados"><span class="header-section-number">4.3.2</span> Estimación MV de modelos de espacio de los estados</a></li>
+  </ul>
+</li>
+  <li><a href="#selecci%C3%B3n-de-modelos" id="toc-selección-de-modelos" class="nav-link" data-scroll-target="#selecci%C3%B3n-de-modelos"><span class="header-section-number">4.4</span> Selección de modelos</a></li>
+  <li>
+<a href="#predicci%C3%B3n" id="toc-predicción" class="nav-link" data-scroll-target="#predicci%C3%B3n"><span class="header-section-number">4.5</span> Predicción</a>
+  <ul class="collapse">
+<li><a href="#predicci%C3%B3n-puntual" id="toc-predicción-puntual" class="nav-link" data-scroll-target="#predicci%C3%B3n-puntual"><span class="header-section-number">4.5.1</span> Predicción puntual</a></li>
+  <li><a href="#varianza-de-las-predicciones" id="toc-varianza-de-las-predicciones" class="nav-link" data-scroll-target="#varianza-de-las-predicciones"><span class="header-section-number">4.5.2</span> Varianza de las predicciones</a></li>
+  <li><a href="#predicci%C3%B3n-de-la-distribuci%C3%B3n-completa" id="toc-predicción-de-la-distribución-completa" class="nav-link" data-scroll-target="#predicci%C3%B3n-de-la-distribuci%C3%B3n-completa"><span class="header-section-number">4.5.3</span> Predicción de la distribución completa</a></li>
+  </ul>
+</li>
+  <li><a href="#an%C3%A1lisis-completo-de-la-serie-de-pasajeros-de-avi%C3%B3n" id="toc-análisis-completo-de-la-serie-de-pasajeros-de-avión" class="nav-link" data-scroll-target="#an%C3%A1lisis-completo-de-la-serie-de-pasajeros-de-avi%C3%B3n"><span class="header-section-number">4.6</span> Análisis completo de la serie de pasajeros de avión</a></li>
+  <li><a href="#bibliograf%C3%ADa" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliograf%C3%ADa"><strong>Bibliografía</strong></a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Suavizado exponencial en Espacio de los Estados</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>Hasta ahora hemos contemplado el suavizado exponencial como un método de predicción, es decir, como un conjunto de reglas más o menos inteligentes para predecir series temporales. En este capítulo los vamos a tratar como un modelo formal estadístico. Todos los métodos de suavizado exponencial vistos se pueden encuadrar dentro de un marco general que es el de <strong>Espacio de los Estados</strong>.</p>
+<p>Existen múltiples formas de Espacio de los Estados. Por conveniencia, en este capítulo nos centraremos en la forma de Espacio de los Estados <strong>en forma de innovaciones</strong>, que tiene la peculiaridad de depender de un solo ruido aleatorio, también se suelen llamar sistemas con una sola fuente de ruido (<em>Sigle Source of Error</em> o SSOE en inglés). En el siguiente capítulo se aboradarán los modelos en forma de Espacio de los Estados con múltiples ruidos (<em>Multiple Source of Error</em> o MSOE) que se utilizarán en la especificación de otra familia de modelos de suavizado exponencial.</p>
+<section id="modelos-ssoe-de-espacio-de-los-estados" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="modelos-ssoe-de-espacio-de-los-estados">
+<span class="header-section-number">4.1</span> Modelos SSOE de Espacio de los Estados</h2>
+<p>La formulación con una sola fuente de ruido del modelo de espacio de los estados que vamos a utilizar en este capítulo se encuentra en la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a>.</p>
+<p><span id="eq-sysinnLinear"><span class="math display">\[
+\begin{array}{rl}
+    \text{Ecuación de observación:} &amp;    y_t = w x_{t-1} + \epsilon_t \\
+    \text{Ecuación de transición:} &amp; x_{t} = F x_{t-1} + g \epsilon_{t}
+\end{array}
+\tag{4.1}\]</span></span></p>
+<p>Dicho sistema está compuesto por dos ecuaciones ligadas entre sí por dos elementos, <span class="math inline">\(x_t\)</span> y <span class="math inline">\(\epsilon\)</span>. La <strong>ecuación de transición</strong> refleja el comportamiento dinámico del sistema al conectar el vector de estados <span class="math inline">\(x_t\)</span> de dimensión <span class="math inline">\(n\)</span> con su pasado y una perturbación escalar <span class="math inline">\(\epsilon_t\)</span>, que se supone normal con media cero y varianza constante <span class="math inline">\(\sigma^2\)</span>. La <strong>ecuación de observación</strong> relaciona los datos de salida escalar <span class="math inline">\(y_t\)</span> con los estados y la perturbación. Los demás elementos son las matrices del sistema de dimensiones apropiadas. En particular, <span class="math inline">\(F\)</span> es una matriz cuadrada <span class="math inline">\(n\times n\)</span>, <span class="math inline">\(g\)</span> es la matriz de ganancias <span class="math inline">\(n \times 1\)</span> y <span class="math inline">\(w\)</span> es un vector <span class="math inline">\(1 \times n\)</span>.</p>
+<p>Para poder encajar los modelos no lineales es necesario generalizar el modelo, ver la <a href="#eq-sysNoLineal">Ecuación&nbsp;<span>4.2</span></a>.</p>
+<p><span id="eq-sysNoLineal"><span class="math display">\[
+\begin{array}{rl}
+       \text{Ecuación de observación:} &amp; y_t = w(x_{t-1}) + r(x_{t-1})\epsilon_t \\
+        \text{Ecuación de transición:} &amp; x_{t} = f(x_{t-1}) + g(x_{t-1}) \epsilon_{t}
+\end{array}
+\tag{4.2}\]</span></span></p>
+<p>La diferencia con el sistema lineal es que en esta ecuación <span class="math inline">\(f(x_{t-1})\)</span>, <span class="math inline">\(g(x_{t-1})\)</span>, <span class="math inline">\(w(x_{t-1})\)</span> y <span class="math inline">\(r(x_{t-1})\)</span> son funciones no lineales del vector de estados. Evidentemente, si se escogen funciones lineales y <span class="math inline">\(r(x_{t-1})=1\)</span> se obtiene como caso particular la versión lineal en la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a>.</p>
+<p>Hay un detalle que en principio puede parece trivial, pero que hace este sistema singular y especialmente fácil de tratar. Se trata de que hay una sola fuente de ruido aleatorio, <span class="math inline">\(\epsilon_t\)</span>. Esto hace que los estados sean observables sin ninguna incertidumbre y, con una sencilla manipulación y conocido el vector de estados inicial <span class="math inline">\(x_0\)</span>, se puedan obtener recursivamente dichos estados.</p>
+<p>En efecto, si en el sistema lineal de la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a> se despeja la perturbación de la ecuación de observación (<span class="math inline">\(\epsilon_t = y_t - w x_{t-1}\)</span>) y se sustituye en la ecuación de transición tenemos que,</p>
+<p><span class="math display">\[
+x_t=F x_{t-1} + g (y_t - w x_{t-1}).
+\]</span></p>
+<p>Dado un vector de estados inicial conocido <span class="math inline">\(x_0\)</span>, se puede calcular recursivamente toda la secuencia de estados.</p>
+<p>En el modelo no lineal tenemos que <span class="math inline">\(\epsilon_t = [y_t - w(x_{t-1})]/r(x_{t-1})\)</span> y</p>
+<p><span class="math display">\[
+x_t=f(x_{t-1}) + g(x_{t-1}) [y_t - w(x_{t-1})]/r(x_{t-1}).
+\]</span></p>
+</section><section id="modelos-de-suavizado-exponencial-en-forma-de-espacio-de-los-estados" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="modelos-de-suavizado-exponencial-en-forma-de-espacio-de-los-estados">
+<span class="header-section-number">4.2</span> Modelos de suavizado exponencial en forma de Espacio de los Estados</h2>
+<p>El modelo de suavizado exponencial está formado por combinaciones particulares de los componentes que se consideren apropiados en cada caso. A continuación se consideran los modelos más habituales para cada componente con su forma de espacio de los estados que se encuentran disponibles en el paquete <strong>UComp</strong>.</p>
+<p>Los componentes que vamos a considerar son el nivel <span class="math inline">\(l_t\)</span>, pendiente <span class="math inline">\(b_t\)</span>, estacionalidad <span class="math inline">\(s_t\)</span> y ruido <span class="math inline">\(\epsilon_t\)</span>. En general los modelos particulares de los componentes dependen de si se incluyen estacionalidad y de si el ruido es aditivo o multiplicativo.</p>
+<p>Las formas de espacio de los estados de las quince combinaciones posibles con ruido aditivo se encuentran en la <a href="#fig-tabETS">Figura&nbsp;<span>4.1</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-tabETS" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="tabETS.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Figura&nbsp;4.1: Forma de espacio de los estados de modelos de suavizado exponencial con ruido aditivo.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Todos los modelos con algún componente multiplicativo tienen necesariamente una representación en forma de espacio de estados no lineales de acuerdo con la <a href="#eq-sysNoLineal">Ecuación&nbsp;<span>4.2</span></a>, el resto son lineales como en la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a>. La <a href="#fig-tabETSss">Figura&nbsp;<span>4.2</span></a> muestra las matrices del sistema de espacio de los estados lineal o no lineal con la que se puede representar cada uno de los que aparecen en la <a href="#fig-tabETS">Figura&nbsp;<span>4.1</span></a>. Por razones de espacio, los modelos no lineales con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>. En todos ellos se ha utilizado la matriz de transición <span class="math inline">\(\Phi\)</span> del componente estacional aditivo, cuya definición es la siguiente</p>
+<p><span class="math display">\[
+\Phi=\left[
+\begin{array}{ccccc}
+   0 &amp; 0 &amp; \dots &amp; 0 &amp; 1\\
+   1 &amp; 0 &amp; \dots &amp; 0 &amp; 0\\
+   0 &amp; 1 &amp; \dots &amp; 0 &amp; 0\\
+   \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots\\
+   0 &amp; 0 &amp; \dots &amp; 1 &amp; 0
+\end{array}
+\right].
+\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-tabETSss" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="tabETSss.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption class="figure-caption">Figura&nbsp;4.2: Matrices del sistema de cada uno de los modelos con ruido aditivo.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>En el caso de los modelos con ruido multiplicativo todos son no lineales y se muestran en la <a href="#fig-tabETSm">Figura&nbsp;<span>4.3</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-tabETSm" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="tabETSm.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Figura&nbsp;4.3: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo</figcaption></figure>
+</div>
+</div>
+</div>
+<p>La <a href="#fig-tabETSmss">Figura&nbsp;<span>4.4</span></a> muestra las matrices del sistema no lineal de espacio de los estados. Los modelos con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-tabETSmss" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="tabETSmss.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Figura&nbsp;4.4: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Finalmente, todos los modelos con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-tabETSmseas" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="tabETSmseas.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Figura&nbsp;4.5: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo</figcaption></figure>
+</div>
+</div>
+</div>
+<p>El lector puede comprobar que efectivamente las matrices del sistema de las tablas anteriores reproducen los modelos que efectivamente se quieren representar. A continuación se proponen dos ejemplos con sus soluciones.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Solución</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Comprueba que efectivamente se obtiene el modelo ETS(A,A,A) utilizando las matrices del sistema de la <a href="#fig-tabETSss">Figura&nbsp;<span>4.2</span></a>.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>El sistema es lineal, por lo que se podrá escribir como</p>
+<p><span class="math display">\[
+\begin{array}{l}
+    y_t =  \left[\begin{array}{cccccc} 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1\end{array} \right]
+          x_{t-1} + \epsilon_t \\
+    x_t=\left[\begin{array}{c} l_t \\ b_t \\ s_t \\ s_{t-1} \\ s_{t-2} \\ s_{t-3}\end{array} \right] =
+       \left[\begin{array}{cccccc} 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+                                   0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+                                   0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\
+                                   0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
+                                   0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 \\
+                                   0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 \\
+       \end{array} \right]
+       \left[\begin{array}{c} l_{t-1} \\ b_{t-1} \\ s_{t-1} \\ s_{t-2} \\ s_{t-3} \\ s_{t-4}\end{array} \right] +
+       \left[\begin{array}{c} \alpha \\ \beta \\ \gamma \\ 0 \\ 0 \\ 0\end{array} \right]
+       \epsilon_t
+\end{array}.
+\]</span></p>
+<p>Operando tenemos las ecuaciones de la <a href="#fig-tabETS">Figura&nbsp;<span>4.1</span></a>:</p>
+<p><span class="math display">\[
+\begin{array}{l}
+y_t=l_{t-1}+b_{t-1}+s_{t-4} \\
+l_t=l_{t-1}+b_{t-1}+\alpha \epsilon_t \\
+b_t=b_{t-1}+\beta \epsilon_t \\
+s_t=s_{t-4}+\gamma \epsilon_t
+\end{array}
+\]</span></p>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Solución</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Comprueba que efectivamente se obtiene el modelo ETS(M,M,M) utilizando las matrices del sistema de la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>El sistema es no lineal, por lo que tendremos que utilizar el sistema de la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a>.</p>
+<p><span class="math display">\[
+\begin{array}{l}
+y_t=l_{t-1}b_{t-1}s_{t-4}+l_{t-1}b_{t-1}s_{t-4}\epsilon_t \\
+x_t=\left[\begin{array}{c} l_t \\ b_t \\ s_t \\ s_{t-1} \\ s_{t-2} \\ s_{t-3}\end{array} \right] = \left[\begin{array}{cccccc} b_{t-1} &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+                                   0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+                                   0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\
+                                   0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
+                                   0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 \\
+                                   0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 \\
+       \end{array} \right]
+       \left[\begin{array}{c} l_{t-1} \\ b_{t-1} \\ s_{t-1} \\ s_{t-2} \\ s_{t-3} \\ s_{t-4}\end{array} \right] +
+\left[\begin{array}{c} \alpha l_{t-1}b_{t-1} \\ \beta b_{t-1} \\ \gamma s_{t-4} \\ 0 \\ 0 \\ 0\end{array} \right] \epsilon_t
+\end{array}
+\]</span></p>
+<p>Operando tenemos las ecuaciones de la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>:</p>
+<p><span class="math display">\[
+\begin{array}{l}
+y_t=l_{t-1}b_{t-1}s_{t-4}+l_{t-1}b_{t-1}s_{t-4}\epsilon_t=l_{t-1}b_{t-1}s_{t-4}(1+\epsilon_t) \\
+l_t=l_{t-1}b_{t-1}+\alpha l_{t-1}b_{t-1} \epsilon_t = l_{t-1}b_{t-1}(1+\alpha \epsilon_t)\\
+b_t=b_{t-1}+\beta b_{t-1}\epsilon_t = b_{t-1}(1+\beta \epsilon_t)\\
+s_t=s_{t-4}+\gamma s_{t-4} \epsilon_t = s_{t-4}(1+\gamma \epsilon_t)
+\end{array}
+\]</span></p>
+</div>
+</div>
+</div>
+<p>Aunque se pueden usar las <span class="math inline">\(30\)</span> combinaciones, los modelos con tendencia multiplicativa tienden a evitarse, por las dificultades de estimación y la escasa eficacia en la predicción.</p>
+<p>Los parámetros no pueden tomar cualquier valor, sino que deben estar restringidos de forma que <span class="math inline">\(0&lt;\alpha&lt;1\)</span>, <span class="math inline">\(0&lt;\beta&lt;\alpha\)</span>, <span class="math inline">\(0&lt;\gamma&lt;1-\alpha\)</span>, <span class="math inline">\(0&lt;\phi&lt;1\)</span>, <span class="math inline">\(0&lt;\sigma^2&lt;\infty\)</span>. Algunas de estas restricciones no parecen lógicas porque provienen de la formulación explícita de los modelos como suavizados exponenciales. Puede haber otras restricciones basadas en <em>regiones de admisibilidad</em> de los parámetros (ver detalles en Hyndman <em>et al.</em>, 2008).</p>
+</section><section id="estimación" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="estimación">
+<span class="header-section-number">4.3</span> Estimación</h2>
+<section id="el-principio-de-máxima-verosimilitud" class="level3" data-number="4.3.1"><h3 data-number="4.3.1" class="anchored" data-anchor-id="el-principio-de-máxima-verosimilitud">
+<span class="header-section-number">4.3.1</span> El principio de Máxima Verosimilitud</h3>
+<p>Cuando disponemos de una función de distribución dada, por ejemplo una gaussiana con media y varianzas conocidas (<span class="math inline">\(\mu\)</span> y <span class="math inline">\(\sigma^2\)</span>, respectivamente), podemos obtener muestras aleatorias de la misma. Lo hemos hecho varias veces a lo largo de los capítulos anteriores. Asumiendo gaussianidad, la función se podría escribir como sigue</p>
+<p><span class="math display">\[
+p(y_t|\mu, \sigma^2) = (2\pi \sigma^2)^{-1/2} \exp \left[ -\frac{(y_t-\mu)^2}{2\sigma^2} \right].
+\]</span></p>
+<p>El lado izquierdo de la igualdad habría que leerlo como la función de densidad de la variable aleatoria <span class="math inline">\(y_t\)</span> condicionada, es decir, dados unos valores fijos conocidos, de los parámetros <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\sigma^2\)</span> de los que depende. De esta función se podrían extraer tantas muestras cuantas se desee.</p>
+<p>El problema de estimación es justo el contrario, tenemos una muestra concreta conocida <span class="math inline">\(y_t\)</span> que suponemos que se ha extraído de una distribución con unos parámetros desconocidos <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\sigma^2\)</span>. Es decir, el rol de la variable y las incógnitas se ha intercambiado. Ahora lo conocido es la muestra y lo desconocido son los parámetros. Esto se podría escribir como</p>
+<p><span class="math display">\[
+L(\mu, \sigma^2|y_t) = (2\pi \sigma^2)^{-1/2} \exp \left[ -\frac{(y_t-\mu)^2}{2\sigma^2} \right].
+\]</span></p>
+<p>Esta <strong>función de verosimilitud</strong>, que en realidad es la misma que la de densidad anterior, nos permite calcular probabilidades de combinaciones de los parámetros condicionados a la muestra de la que disponemos. Si buscamos los valores de <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\sigma^2\)</span> que maximizan esta función estaríamos estimando esos valores que hace más verosímil, más probable, la aparición de la muestra concreta de la que disponemos. Esta es la estimación por <strong>máxima verosimilitud</strong> (MV).</p>
+<p>Las dos funciones anteriores se han escrito para una sola muestra escalar <span class="math inline">\(y_t\)</span>. En el caso de disponer de <span class="math inline">\(T\)</span> muestras independientes con la misma media y varianza, la verosimilitud conjunta de todas ellas (de un vector <span class="math inline">\(Y_T=\{y_1,y_2,\dots,y_T\}\)</span>) será simplemente el producto de las individuales,</p>
+<p><span class="math display">\[
+L(\mu, \sigma^2|Y_T) = (2\pi \sigma^2)^{-T/2} \exp \left[ -\sum_{t=1}^T\frac{(y_t-\mu)^2}{2\sigma^2} \right].
+\]</span></p>
+<p>En el caso de que las muestras <span class="math inline">\(y_t\)</span> no sean independientes, que será el caso más habitual, partiendo de la fórmula de la probabilidad conjunta que afirma que <span class="math inline">\(p(y_1,y_2)=p(y_1)p(y_2|y_1)\)</span>, podemos ver que para tres variables aleatorias tenemos</p>
+<p><span class="math display">\[
+p(y_1,y_2,y_3)=p(y_1,y_2)p(y_3|y_1,y_2)=p(y_1)p(y_2|y_1)p(y_3|y_1,y_2).
+\]</span></p>
+<p>La generalización a <span class="math inline">\(T\)</span> variables aleatorias conduce a que la probabilidad de toda la muestra se puede escribir como</p>
+<p><span id="eq-MVgeneral"><span class="math display">\[
+p(y_1,y_2,\dots,y_T)=p(Y_T)=\prod_{t=1}^Tp(y_t|Y_{t-1}),
+\tag{4.3}\]</span></span></p>
+<p>donde cada término del producto es la probabilidad de cada observación condicionada a la información disponible hasta la observación anterior.</p>
+</section><section id="estimación-mv-de-modelos-de-espacio-de-los-estados" class="level3" data-number="4.3.2"><h3 data-number="4.3.2" class="anchored" data-anchor-id="estimación-mv-de-modelos-de-espacio-de-los-estados">
+<span class="header-section-number">4.3.2</span> Estimación MV de modelos de espacio de los estados</h3>
+<p>Todos los modelos vistos en este capítulo dependen de una serie de parámetros, que en general, serán desconocidos cuando se estén analizando series temporales particulares. Estos parámetros son <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span>, <span class="math inline">\(\phi\)</span> y <span class="math inline">\(\sigma^2\)</span>. Además, debemos recordar que el valor de los estados depende crucialmente del vector de estados inicial de los mismos, que se han considerado conocidos hasta el momento, pero que en casos reales no lo son. En muestras largas, el efecto de las condiciones iniciales tiende a diluirse, pero no sucede lo mismo con muestras cortas.</p>
+<!-- El procedimiento de estimación más habitual es **Máxima Verosimilitud**, que consiste en elegir los parámetros (y las condiciones iniciales) de forma que se maximice la probabilidad de que efectivamente suceda lo observado en la muestra. Es decir, se trata de encontrar los parámetros que maximicen la probabilidad de la muestra empíricamente observada. Para hacer este cálculo asumimos que el modelo es correcto y la función de distribución de los datos es normal (algo que se puede comprobar a posteriori en el diagnóstico del modelo). -->
+<p>Todo lo dicho hasta el momento se ha hecho con el fin de poder establecer el tratamiento estadístico de los modelos sobre la base de la forma general de espacio de los estados, en lugar de tener que ir particularizando para cada modelo concreto. Así el resto del capítulo se referirá únicamente a la forma general de la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a> y la <a href="#eq-sysNoLineal">Ecuación&nbsp;<span>4.2</span></a>, entendiendo que los resultados son válidos para todos los casos particulares.</p>
+<!-- Partiendo de la fórmula de la probabilidad conjunta que afirma que $p(y_1,y_2)=p(y_1)p(y_2|y_1)$ podemos ver que para tres variables aleatorias tenemos -->
+<!-- $$ -->
+<!-- p(y_1,y_2,y_3)=p(y_1,y_2)p(y_3|y_1,y_2)=p(y_1)p(y_2|y_1)p(y_3|y_1,y_2). -->
+<!-- $$ -->
+<!-- La generalización a $T$ variables aleatorias aconduce a que la probabilidad de toda la muestra se puede escribir como -->
+<!-- $$ -->
+<!-- p(y_1,y_2,\dots,y_T)=p(Y_T)=\prod_{t=1}^Tp(y_t|Y_{t-1}), -->
+<!-- $$ -->
+<!-- donde cada término del producto es la probabilidad de cada observación condicionada a la información disponible hasta la observación anterior.  -->
+<p>Dada la forma del modelo general lineal, que precisamente estipula una relación entre la cada observación y el pasado inmediato, tenemos que la distribución de cada <span class="math inline">\(y_t\)</span> condicionado a su pasado es normal con media <span class="math inline">\(wx_{t-1}\)</span> y varianza <span class="math inline">\(\sigma^2\)</span>. Si añadimos el supuesto de normalidad tenemos que</p>
+<p><span class="math display">\[
+    p(y_t|Y_{t-1})= (2\pi \sigma^2)^{-1/2} \exp \left[ -\frac{(y_t-wx_{t-1})^2}{2\sigma^2} \right]=
+     (2\pi \sigma^2)^{-1/2} \exp \left( -\frac{\epsilon_t^2}{2 \sigma^2} \right)
+\]</span> La <a href="#eq-MVgeneral">Ecuación&nbsp;<span>4.3</span></a> nos permite escribir la función de probabilidad de una forma sencilla,</p>
+<p><span id="eq-MVlineal"><span class="math display">\[
+p(Y_t)= (2\pi \sigma^2)^{-T/2} \prod_{t=1}^T \exp \left(  - \frac{\epsilon_t^2}{2\sigma^2} \right)
+\tag{4.4}\]</span></span></p>
+<p>En el caso no lineal, tenemos que la distribución de cada <span class="math inline">\(y_t\)</span> es normal con media <span class="math inline">\(w(x_{t-1})\)</span> y varianza <span class="math inline">\(r(x_{t-1})^2\sigma^2\)</span>, por tanto la función de densidad de una observación es</p>
+<p><span class="math display">\[
+    p(y_t|Y_{t-1})=  [2\pi r(x_{t-1})^2 \sigma^2]^{-1/2} \exp \left[ \frac{[y_t-w(x_{t-1})]^2}{2r(x_{t-1})^2\sigma^2} \right]= \frac{p(\epsilon_t)}{|r(x_{t-1})|},
+\]</span> donde se toma el valor positivo de las raíz cuadrada de <span class="math inline">\(r(x_{t-1})^2\)</span> mediante el valor absoluto, puesto que la medida debe ser una probabilidad. La probabilidad de toda la muestra es,</p>
+<p><span class="math display">\[
+p(Y_t)= (2\pi \sigma^2)^{-T/2} \left|  \prod_{t=1}^T r(x_{t-1}) \right|^{-1} \prod_{t=1}^T \exp \left(  - \frac{\epsilon_t^2}{2\sigma^2} \right)
+\]</span></p>
+<p>Esta es una expresión general que es válida también para modelos lineales en los que <span class="math inline">\(r(x_{t-1})=1\)</span>. Es habitual utilizar el logaritmo de esta expresión por comodidad. Además, para convertirla en la función de verosimilitud, se debe expresar en función de los parámetros de los que depende el modelo <span class="math inline">\(\theta=[\begin{array}{ccc} \alpha &amp; \beta &amp; \gamma &amp; \phi &amp; \sigma^2 \end{array}]'\)</span>, y condicionar a la muestra utilizada, es decir,</p>
+<p><span class="math display">\[
+\log[L(\theta,x_0)|Y_T]= {-T/2} \log (2\pi \sigma^2) -\sum_{t=1}^T \log\left| r(x_{t-1}) \right| -\frac{1}{2} \sum_{t=1}^T \epsilon_t^2/\sigma^2
+\]</span></p>
+<p>La forma de evaluar esta función para cualquier vector de parámetros y condiciones iniciales es tener en cuenta que tanto <span class="math inline">\(r(x_{t-1})\)</span> como <span class="math inline">\(\epsilon_t\)</span> dependen de los mismos. Es decir, partiendo de un modelo concreto, un vector de estados iniciales conocido y valores de los parámetros fijos, podemos calcular recursivamente los valores de <span class="math inline">\(\epsilon_t\)</span>, recordando que <span class="math inline">\(\epsilon_t = [y_t - w(x_{t-1})]/r(x_{t-1})\)</span> y <span class="math inline">\(x_t=f(x_{t-1}) + g(x_{t-1}) [y_t - w(x_{t-1})]/r(x_{t-1})\)</span>.</p>
+<p>En la función anterior <span class="math inline">\(\sigma^2\)</span> en realidad juega el papel de factor de escala que a menudo se aísla de la función de verosimilitud. La forma de la función es tal que ese parámetro se puede <em>concentrar fuera</em> de la función. El proceso consiste en calcular el óptimo de la función derivando e igualando a cero solo para ese parámetro y sustituyendo de vuelta ese valor en la función. La derivada respecto a la varianza es</p>
+<p><span class="math display">\[
+\frac{\partial log(L)}{\partial \sigma^2}=-\frac{T}{2\sigma^2}+\frac{\sum \epsilon_t^2}{2\sigma^4},
+\]</span></p>
+<p>que, igualada a cero da un valor óptimo de la varianza de <span class="math inline">\(\hat{\sigma}^2=\sum \epsilon_t^2/T\)</span>. Es decir, la varianza muestral. Cuando se introduce este valor en la función de verosimilitud, esta se simplifica</p>
+<p><span class="math display">\[
+\begin{array}{rl}
+\log[L(\theta,x_0)|Y_T]= &amp; {-T/2} \log (2\pi) -T/2 \log(\sum \epsilon_t^2/T) -\sum_{t=1}^T \log\left| r(x_{t-1}) \right| -T/2 =\\
+=&amp; c -T/2 \log(\sum \epsilon_t^2) -\sum_{t=1}^T \log\left| r(x_{t-1}) \right|
+\end{array}
+\]</span></p>
+<p>Maximizar esta función es equivalente a minimizar</p>
+<p><span class="math display">\[
+f(\theta,x_0|Y_T) = T \log(\sum \epsilon_t^2) + 2 \sum_{t=1}^T \log\left| r(x_{t-1}) \right|,
+\]</span></p>
+<p>que será la función objetivo en la práctica. Para los modelos lineales en los que <span class="math inline">\(r(x_{t-1})=1\)</span>, la expresión anterior equivale al estimador mínimo cuadrático.</p>
+<p>La función objetivo depende del vector de estados inicial <span class="math inline">\(x_0\)</span> que se ha supuesto conocido, pero que no es conocido en la práctica. Existen al menos dos soluciones para este problema, dependiendo del supuesto que se haga sobre el vector de estados inicial:</p>
+<ul>
+<li>Si se consideran valores fijos, se puede añadir al vector de parámetros a estimar y minimizar la función objetivo respecto a las condiciones iniciales también. Esta es la aproximación utilizada en el paquete <strong>UComp</strong>.</li>
+<li>Si se consideran variables aleatorias con una determinada distribución sería necesario utilizar el filtro de Kalman con inicialización exacta (difusa en el caso de modelos no estacionarios) o utilizar un filtro de Información.</li>
+</ul>
+<!-- La matriz de varianzas y covarianzas de los estimadores se pueden calcular con ayuda del hessiano de la función de verosimilitud, en particular,  --><p>El problema de estimación, entonces, consiste en encontrar los valores de los parámetros (incluyendo las condiciones iniciales) que minimiza dicha función con algún algoritmo de optimización numérico. Tanto este como otros detalles más técnicos quedan fuera del alcance de este libro y el lector interesado puede acudir a la bibliografía.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-5" role="tab" aria-controls="tabset-3-5" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>Carga las librerías <code>UComp</code> (en <strong>R</strong> carga además <code>ggplot2</code>). Considera los datos de pasajeros de avión en logaritmos hasta febrero de 2020 incluido (<code>airpas</code>). Estima un modelo ETS(A,A,A) con la función <code>ETS</code>. Muestra los parámetros del modelo y realiza un diagnóstico de residuos (<code>tests</code> del objeto modelo). Representa también los componentes estimados. ¿Te parece un modelo adecuado?</p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> -------------------------------------------------------------
+  Model: ETS(A,A,A)
+  Box-Cox lambda: 1.00
+  Q-Newton: Function convergence.
+ -------------------------------------------------------------
+                   Param        S.E.          |T|     |Grad|
+ -------------------------------------------------------------
+      Alpha:       0.3367     0.0263      12.7829  1.960e-08
+       Beta:       0.0090     0.0036       2.4722  3.111e-09
+      Gamma:       0.3821     0.0288      13.2834  1.394e-08
+ -------------------------------------------------------------
+   AIC:       0.2950   BIC:       0.4174   AICc:       0.2966
+            Log-Likelihood:     -73.5637
+ -------------------------------------------------------------
+    Summary statistics:
+ -------------------------------------------------------------
+         Missing data:      
+         Q( 1):      26.4152         Q( 4):      33.9828
+         Q( 8):      58.7637         Q(12):      63.1103
+   Bera-Jarque:    1366.6633       P-value:       0.0000
+       H( 206):       0.9863       P-value:       0.4606
+   Outliers (&gt;2.7 ES):    10
+         Q( 1):      60.4878         Q( 4):      85.1360
+         Q( 8):     104.5970         Q(12):     133.6029
+   Bera-Jarque:       8.0994       P-value:       0.0174
+       H( 202):       0.8119       P-value:       0.0698
+ -------------------------------------------------------------</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary statistics:
+==================
+                        Serie 1
+Data points:          622.00000
+Missing:               24.00000
+Minimum:               -0.17581
+1st quartile:          -0.02550
+Mean:                  -0.00162
+P(Mean = 0):            0.38654
+Median:                 0.00070
+3rd quartile:           0.02477
+Maximum:                0.36119
+Interquartile range:    0.05027
+Range:                  0.53700
+Satandard deviation:    0.04578
+Variance:               0.00210
+Skewness:               0.41718
+Kurtosis:               7.29895
+Autocorrelation tests:
+=====================
+     SACF sa      LB p.val  SPACF sp
+1   0.202  +  24.484     0  0.202  +
+2   0.092  +  29.574     0  0.053  .
+3   0.020  .  29.815     0 -0.009  .
+4   0.061  .  32.036     0  0.056  .
+5  -0.123  -  41.121     0 -0.152  -
+6  -0.119  -  49.693     0 -0.080  .
+7  -0.080  .  53.531     0 -0.025  .
+8  -0.062  .  55.873     0 -0.036  .
+9  -0.030  .  56.425     0  0.014  .
+10  0.037  .  57.239     0  0.048  .
+11  0.041  .  58.281     0  0.011  .
+12  0.055  .  60.126     0  0.028  .
+13  0.249  +  98.303     0  0.231  +
+14  0.113  + 106.098     0  0.004  .
+15  0.041  . 107.139     0 -0.012  .
+16 -0.004  . 107.149     0 -0.010  .
+17 -0.030  . 107.697     0 -0.064  .
+18 -0.117  - 116.155     0 -0.057  .
+19 -0.199  - 140.723     0 -0.124  -
+20 -0.112  - 148.462     0 -0.023  .
+21 -0.009  . 148.513     0  0.065  .
+22 -0.016  . 148.670     0 -0.001  .
+23  0.043  . 149.798     0  0.037  .
+24  0.008  . 149.837     0 -0.055  .
+25  0.162  + 166.322     0  0.130  +
+Gaussianity tests:
+=================
+
+    Shapiro-Wilk normality test
+
+data:  x
+W = 0.94071, p-value = 1.057e-14
+
+Ratio of variance tests:
+=======================
+ Portion_of_data F_statistic p.value
+         0.33333      0.9808  0.8918</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>El modelo NO es apropiado porque hay autocorrelación, la distribución de las innovaciones no son normales, aunque seguramente no hay problemas de heterocedasticidad. Es decir, la transformación logarítmica parece adecuada.</p>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Cargando librería</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">UComp</span><span class="op">)</span></span>
+<span><span class="co"># Seleccionando muestra</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">airpas</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Estimando modelo ETS</span></span>
+<span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">x</span>, model<span class="op">=</span><span class="st">"AAA"</span><span class="op">)</span></span>
+<span><span class="co"># Mostrando modelo</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># Mostrando componentes</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># Tests de innovaciones</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/tests.html">tests</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargando librerías</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> UComp <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionando muestra hasta febrero 2020</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end<span class="op">=</span><span class="st">'2020-02-29'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimando modelo ETS</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, model<span class="op">=</span><span class="st">"AAA"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrando modelo</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>m.validate()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrando componentes</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>m.plot()</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests de innovaciones</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>tests(m)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Cargando datos</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>load data</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Seleccionando muestra hasta febrero <span class="dv">2020</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> log(airpas(<span class="dv">1</span> : <span class="dv">614</span>))<span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Estimando modelo ETS</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, <span class="dv">12</span>, model<span class="op">=</span><span class="st">'AAA'</span>)<span class="op">;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Mostrando modelo</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>ETSvalidate(m)<span class="op">;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Mostrando componentes</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>stackedplot(m.comp)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Tests de innovaciones</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>toolTEST(m.v)<span class="op">;</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section></section><section id="selección-de-modelos" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="selección-de-modelos">
+<span class="header-section-number">4.4</span> Selección de modelos</h2>
+<p>La selección de modelos implica buscar el mejor modelo dentro de la familia de los modelos de suavizado exponencial, es decir, elegir el más apropiado de un total de <span class="math inline">\(30\)</span> posibilidades diferentes teniendo en cuenta todas las posibles combinaciones de componentes.</p>
+<p>Una forma de hacerlo, no la única como veremos más adelante, es estimando todas las posibilidades y eligiendo aquel modelo que minimice un criterio de información previamente seleccionado. Los criterios de información son funciones que buscan el mayor ajuste de la muestra penalizando por el número de parámetros. La lógica es aplastante, puesto que, por regla general, siempre que se añadan parámetros a un modelo el ajuste mejora aunque los parámetros no sean realmente relevantes. Con el criterio de información nos aseguramos de que la mejora en términos de verosimilitud al añadir un parámetro es realmente relevante.</p>
+<p>Existen varios criterios de información (<span class="math inline">\(p\)</span> es el número de parámetros del modelo):</p>
+<ul>
+<li>
+<strong>Criterio de información de Akaike</strong>: <span class="math inline">\(AIC=-2log[L(\theta,x_0)|Y_T]+2p\)</span>.</li>
+<li>
+<strong>Criterio de información de Akaike corregido</strong>: <span class="math inline">\(AICc=AIC+2p(p+1)/(T-p-1)\)</span>.</li>
+<li>
+<strong>Criterio de información bayesiano</strong>: <span class="math inline">\(BIC=-2log[L(\theta,x_0)|Y_T]+p\log(T)\)</span>.</li>
+</ul>
+<p>Dado que los criterios de información son función de la función de verosimilitud en el óptimo con signo menos, el mejor modelo será aquel que minimice el criterio en cuestión. El más utilizado en este contexto es <span class="math inline">\(AICc\)</span>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-5" role="tab" aria-controls="tabset-4-5" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<!-- Carga la librería `UComp`. Considera los datos del PIB español hasta el último trimestre de 2019. Selecciona el mejor modelo con la función `ETS`. Puedes ver los resultados de todos los modelos a medida que se van estimando si eliges la entrada `verbose` como `TRUE`. Muestra los parámetros del modelo con `print`, representa los componentes con `plot` y realiza un diagnóstico de residuos. ¿Te parece un modelo adecuado? ¿Se obtiene el mismo modelo utilizando cualquier criterio de información? -->
+<p>Considera los datos de los pasajeros de avión hasta febrero de 2020 en logaritmos. Selecciona el mejor modelo con la función <code>ETS</code>. Puedes ver los resultados de todos los modelos a medida que se van estimando si eliges la entrada <code>verbose</code> como <code>TRUE</code>. Muestra los parámetros del modelo, representa los componentes y realiza un diagnóstico de residuos. ¿Te parece un modelo adecuado? ¿Se obtiene el mismo modelo utilizando cualquier criterio de información?</p>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>--------------------------------------------------------
+    Model            AIC           BIC          AICc
+--------------------------------------------------------
+   (A,N,N):        2.1785        2.1929        2.1785
+   (A,N,A):        0.3654        0.4734        0.3654
+   (A,A,N):        2.1830        2.2118        2.1830
+   (A,A,A):        0.2950        0.4174        0.2966
+  (A,Ad,N):        2.1841        2.2201        2.1841
+  (A,Ad,A):        0.5394        0.6689        0.5410
+   (M,N,N):        2.2149        2.2293        2.2149
+   (M,N,A):        0.4167        0.5247        0.4167
+   (M,N,M):        0.4457        0.5536        0.4457
+   (M,A,N):        2.2172        2.2459        2.2172
+   (M,A,A):        0.3334        0.4558        0.3350
+   (M,A,M):        0.5474        0.6698        0.5490
+  (M,Ad,N):        2.2181        2.2541        2.2181
+  (M,Ad,A):        0.3607        0.4903        0.3624
+  (M,Ad,M):        0.5660        0.6955        0.5676
+--------------------------------------------------------
+  Identification time:    0.30084 seconds
+--------------------------------------------------------
+ -------------------------------------------------------------
+  Model: ETS(A,A,A)
+  Box-Cox lambda: 1.00
+  Q-Newton: Function convergence.
+ -------------------------------------------------------------
+                   Param        S.E.          |T|     |Grad|
+ -------------------------------------------------------------
+      Alpha:       0.3367     0.0263      12.7829  1.960e-08
+       Beta:       0.0090     0.0036       2.4722  3.111e-09
+      Gamma:       0.3821     0.0288      13.2834  1.394e-08
+ -------------------------------------------------------------
+   AIC:       0.2950   BIC:       0.4174   AICc:       0.2966
+            Log-Likelihood:     -73.5637
+ -------------------------------------------------------------
+    Summary statistics:
+ -------------------------------------------------------------
+         Missing data:      
+         Q( 1):      26.4152         Q( 4):      33.9828
+         Q( 8):      58.7637         Q(12):      63.1103
+   Bera-Jarque:    1366.6633       P-value:       0.0000
+       H( 206):       0.9863       P-value:       0.4606
+   Outliers (&gt;2.7 ES):    10
+         Q( 1):      60.4878         Q( 4):      85.1360
+         Q( 8):     104.5970         Q(12):     133.6029
+   Bera-Jarque:       8.0994       P-value:       0.0174
+       H( 202):       0.8119       P-value:       0.0698
+ -------------------------------------------------------------</code></pre>
+</div>
+</div>
+<p>El modelo seleccionado es ETS(A,A,A), que de hecho ya se había estimado anteriormente y vimos que no era adecuado. Los tres criterios de información seleccionan el mismo modelo.</p>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">airpas</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">x</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end <span class="op">=</span> <span class="st">'2020-02-29'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, verbose<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> log(airpas(<span class="dv">1</span> : <span class="dv">614</span>))<span class="op">;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, <span class="dv">12</span>, verbose<span class="op">=</span>true)<span class="op">;</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="predicción" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="predicción">
+<span class="header-section-number">4.5</span> Predicción</h2>
+<p>La predicción consiste en estimar la distribución de los estados futuros y de la variable salida en función de la historia pasada. Es decir, si queremos obtener la distribución de la variable aleatoria <span class="math inline">\(x_{T+h|T}\)</span> (que equivale a decir que queremos predecir el vector de estados <span class="math inline">\(x_t\)</span>, <span class="math inline">\(h\)</span> periodos hacia adelante desde un origen <span class="math inline">\(T\)</span> que suele ser el final de la muestra), tendremos que plantear un predictor (<span class="math inline">\(\hat{f}_{T+h}\)</span>) y una función objetivo para poder hablar de predicción óptima.</p>
+<p>Lo interesante de este planteamiento es que la función de pérdida u objetivo puede ser simétrica, es decir, los errores de predicción por exceso se penalizan igual que por defecto, pero puede ser también asimétrica, de forma que los errores por defecto, por ejemplo, tengan una penalización mayor.</p>
+<p>Lo más habitual es utilizar una función de pérdida simétrica y en particular el error cuadrático medio, es decir,</p>
+<p><span class="math display">\[
+L(\hat{e}_{T+h|T})=\text{E} (\hat{f}_{T+h}-x_{T+h})^2
+\]</span></p>
+<p>La minimización conduce a derivar respecto al predictor e igualar a cero,</p>
+<p><span class="math display">\[
+\frac{\partial L}{\partial \hat{f}_{T+h}}=0=2\hat{f}_{T+h}-2\text{E}(x_{T+h}|T)
+\]</span></p>
+<p>De aquí se obtiene que <span class="math inline">\(\hat{f}_{T+h}=\text{E}(x_{T+h}|T)\)</span>. La predicción óptima con esta función objetivo es la media de la variable aleatoria en el futuro, condicionada a la información presente.</p>
+<p>Dada la ecuación de transición, calcular la esperanza condicionada es muy sencillo. Considerando <span class="math inline">\(l=1\)</span>,</p>
+<p><span class="math display">\[
+\text{E}(x_{T+1}|T)=F\text{E}(x_{T}|T)+g\text{E}(\epsilon_{T+1}|T)=Fx_T
+\]</span></p>
+<p>Por tanto, la predicción óptima será <span class="math inline">\(\hat{x}_{T+1|T}=Fx_{T}\)</span>, que equivale simplemente a aplicar la dinámica de la ecuación prescindiendo de los ruidos.</p>
+<p>De igual forma, la predicción óptima para la variable salida del modelo será,</p>
+<p><span class="math display">\[
+\text{E}(y_{T+1}|T)=\hat{y}_{T+1|T}=w\text{E}(x_{T}|T)+\text{E}(\epsilon_{T+1}|T)=wx_T
+\]</span></p>
+<p>Las predicciones para horizontes más largos se obtendrían aplicando recursivamente estas ecuaciones, como veremos más tarde.</p>
+<p>Con todos estos elementos podemos plantear tres tipos de predicción:</p>
+<ul>
+<li>
+<strong>Predicción puntual</strong>: consiste en estimar algún momento de posición de la distribución futura, la media por lo general. A menudo interesa estimar igualmente intervalos de predicción o confianza, por lo que será necesario también el error cuadrático medio de la predicción.</li>
+<li>
+<strong>Predicción por intervalos de confianza o predicción</strong>: consiste en estimar alguna medida de incertidumbre en torno a la predicción puntual. Dicha incertidumbre estará normalmente estimada por la varianza de las predicciones. Los intervalos de confianza se podrán construir asumiendo alguna distribución y un determinado nivel de confianza. Los intervalos también se pueden construir por simulación (como en el siguiente tipo de predicción) en el que solo se elige el nivel de confianza, y se utiliza la distribución empírica de los errores.</li>
+<li>
+<strong>Predicción de la distribución completa</strong>: es computacionalmente mucho menos eficiente al tener que hacerse por simulación, pero añade un punto de sumo interés que consiste en que se puede utilizar la distribución empírica de las predicciones, consiguiendo unos intervalos de predicción mucho más adaptados a la muestra empírica de la que se dispone.</li>
+</ul>
+<section id="predicción-puntual" class="level3" data-number="4.5.1"><h3 data-number="4.5.1" class="anchored" data-anchor-id="predicción-puntual">
+<span class="header-section-number">4.5.1</span> Predicción puntual</h3>
+<p>Como ya hemos visto, la predicción puntual óptima consiste en estimar la media condicionada de los estados futuros. En el sistema lineal es relativamente fácil de estimar. Consideremos que hemos estimado un modelo con una muestra de tamaño <span class="math inline">\(T\)</span>, la predicción un periodo hacia adelante consiste simplemente en calcular la esperanza condicionada a la información contenida en muestra en el sistema lineal, es decir,</p>
+<p><span class="math display">\[
+\hat{x}_{T+1|T}=E(x_{T+1}|T)=E[(Fx_T+g \epsilon_{T+1})|T]=Fx_T,
+\]</span></p>
+<p>donde se ha utilizado el hecho de que la predicción de <span class="math inline">\(\epsilon_T\)</span> es su media incondicionada, es decir, cero. Además se utilizan las estimaciones de los parámetros con toda la muestra. La predicción con un horizonte mayor se obtiene de forma recursiva, es decir,</p>
+<p><span class="math display">\[
+\hat{x}_{T+2|T}=E(x_{T+2}|T)=E[(Fx_{T+1}+g \epsilon_{T+2})|T]=F\hat{x}_{T+1|T}=FFx_T.
+\]</span></p>
+<p>En general tendremos que la predicción <span class="math inline">\(h\)</span> periodos hacia adelante será <span class="math inline">\(\hat{x}_{T+h|T}=F^hx_T\)</span>, donde <span class="math inline">\(F^h\)</span> es el producto de de la matriz <span class="math inline">\(F\)</span>, <span class="math inline">\(h\)</span> veces por sí misma. Utilizando este resultado, la predicción para la variable de salida será <span class="math inline">\(\hat{y}_{T+h|T}=E(y_{T+h}|T)=wF^{h-1}x_T\)</span>.</p>
+</section><section id="varianza-de-las-predicciones" class="level3" data-number="4.5.2"><h3 data-number="4.5.2" class="anchored" data-anchor-id="varianza-de-las-predicciones">
+<span class="header-section-number">4.5.2</span> Varianza de las predicciones</h3>
+<p>Un resultado útil para calcular las varianzas de las predicciones es sustituir repetidamente la ecuación de estados en sí misma y en la ecuación de observación para obtener fórmulas recursivas generales de los estados y la salida. Por ejemplo, para horizonte <span class="math inline">\(2\)</span> tenemos</p>
+<p><span class="math display">\[
+\begin{array}{c}
+x_{T+2}=F x_{T+1} + g \epsilon_{T+2}= F^2 x_T+ F g \epsilon_{T+1}+g \epsilon_{T+2} \\
+y_{T+2}=wx_{T+1}+\epsilon_{T+2}=wFx_T+wg\epsilon_{T+1}+\epsilon_{T+2}
+\end{array}
+\]</span></p>
+<p>Para un horizonte genérico <span class="math inline">\(h\)</span> tenemos</p>
+<p><span class="math display">\[
+\begin{array}{c}
+x_{T+h}= F^h x_T+ \sum_{l=1}^h F^{h-l} g \epsilon_{T+l} \\
+y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
+\end{array}
+\]</span></p>
+<p>Tomando las esperanzas condicionadas tenemos las expresiones que ya hemos calculado anteriormente. La ventaja es que ahora podemos calcular las expresiones explícitas para las varianzas condicionadas, que son</p>
+<p><span class="math display">\[
+\begin{array}{c}
+\text{Var}(\hat{x}_{T+h}|Y_T)=E[(x_{T+h}-\hat{x}_{T+h|T})(x_{T+h}-\hat{x}_{T+h|T})'|Y_T]= \sum_{l=1}^h F^{h-l} g g' (F^{h-l})' \sigma^2 \\
+\text{Var}(\hat{y}_{T+h}|Y_T)=E(y_{T+h}-\hat{y}_{T+h|T})^2=\sum_{l=2}^{h-1} wF^{h-l}g g'(F^{h-l})' w' \sigma^2+\sigma^2
+\end{array}
+\]</span></p>
+<p>Los intervalos de confianza de las predicción se estiman de la forma habitual, como un intervalo en torno a la media que es una constante multiplicada por la desviación típica. Dicha constante depende del nivel de confianza elegido en una distribución <span class="math inline">\(t\)</span> de Student con <span class="math inline">\(T-p\)</span> grados de libertad.</p>
+<p>Para el modelo no lineal las predicciones serían similares, pero muchos de los casos particulares no tienen una formulación analítica explícita, aunque siempre se pueden obtener por simulación, como se especifica en la siguiente sección.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-5" role="tab" aria-controls="tabset-5-5" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<!-- Estima el modelo adecuado para el PIB español hasta el último trimestre de 2019 (`ETS`). Predice dos años hacia adelante la serie y representa la predicción puntual con su intervalo de confianza al 95%  (`autoplot` + `autolayer`). Para ello debes utilizar la media y la varianza de las predicciones en los campos `yFor` e `yForV` del objeto con contiene el modelo. -->
+<p>Estima el modelo adecuado para los pasajeros de avión hasta febrero de 2020 en logaritmos (<code>ETS</code>). Predice dos años hacia adelante la serie y representa la predicción puntual con su intervalo de confianza al 95% (en <strong>R</strong> puedes utilizar <code>autoplot</code> + <code>autolayer</code>). Para ello debes utilizar la media y la varianza de las predicciones en los campos <code>yFor</code> e <code>yForV</code> del objeto con contiene el modelo.</p>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Limpiando memoria</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Selecionando muestra</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">airpas</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Horizonte de predicción</span></span>
+<span><span class="va">h</span> <span class="op">=</span> <span class="fl">24</span></span>
+<span><span class="co"># Estimando y prediciendo</span></span>
+<span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">x</span>, h <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span>
+<span><span class="co"># Calculando bandas de confianza al 95%</span></span>
+<span><span class="va">bands</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yFor</span> <span class="op">+</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yForV</span><span class="op">)</span>, <span class="va">m</span><span class="op">$</span><span class="va">yFor</span> <span class="op">-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yForV</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Mostrando gráficamente</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">airpas</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">bands</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecionando muestra</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end <span class="op">=</span> <span class="st">'2020-02-29'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizonte de predicción</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimando y prediciendo</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, h <span class="op">=</span> h)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculando bandas de confianza al 95%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>bands <span class="op">=</span> np.exp(pd.concat((m.yFor <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> np.sqrt(m.yForV), </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                          m.yFor <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> np.sqrt(m.yForV)), axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrando gráficamente</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>plt.plot(airpas[<span class="op">-</span><span class="dv">60</span>:])</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.plot(bands)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>plt.plot(np.exp(m.yFor))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-5-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Limpiando memoria y cargando datos</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>clear <span class="bu">all</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>load data</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Selecionando muestra</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> log(airpas(<span class="dv">1</span> : <span class="dv">614</span>))<span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Horizonte de predicción</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">24</span><span class="op">;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Estimando y prediciendo</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, <span class="dv">12</span>, h <span class="op">=</span> h)<span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Calculando bandas de confianza al <span class="dv">95</span><span class="op">%</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>bands <span class="op">=</span> [m.yFor <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> sqrt(m.yForV) m.yFor <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> sqrt(m.yForV)]<span class="op">;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Mostrando gráficamente</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="dv">590</span> : length(airpas)<span class="op">;</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>plot(t, airpas(t), <span class="dv">615</span> : <span class="dv">614</span> <span class="op">+</span> h, exp([bands m.yFor]))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="predicción-de-la-distribución-completa" class="level3" data-number="4.5.3"><h3 data-number="4.5.3" class="anchored" data-anchor-id="predicción-de-la-distribución-completa">
+<span class="header-section-number">4.5.3</span> Predicción de la distribución completa</h3>
+<p>Las predicciones de cualquier sistema lineal o no lineal también se pueden calcular simulando el ruido. Basta con considerar todos los valores estimados de los parámetros, así como el vector final de estados para obtener tantas predicciones como ruidos simulados. Estos valores futuros sirven para reconstruir las distribuciones de las predicciones con cualquier horizonte.</p>
+<p>Un aspecto final interesante es que el ruido que se simula puede provenir de las propiedades teóricas asumidas para el modelo, habitualmente una distribución normal (<strong>simulación de Montecarlo</strong>), o puede hacerse extrayendo aleatoriamente (con repetición) valores de los residuos estimados (<strong>simulación</strong> <strong><em>bootstrap</em></strong>). El interés del último caso es que se reproduce la distribución empírica de los residuos.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-4" role="tab" aria-controls="tabset-6-4" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-5" role="tab" aria-controls="tabset-6-5" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<p>Estima el modelo adecuado para los pasajeros de avión en logaritmos hasta febrero de 2020 (<code>ETS</code>). Mira el diagnóstico de residuos en la tabla de estimación. Predice dos años hacia adelante la serie haciendo una simulación <em>bootstrap</em> para estimar la distribución de las predicciones (entrada <code>bootstrap</code> de <code>ETS</code>). Representa gráficamente la predicción con el intervalo de predicción calculado con las simulaciones al <span class="math inline">\(95\%\)</span> de confianza (<code>quantile</code>). Haz un test de gaussianidad de las predicciones un mes y doce meses hacia adelante (<code>gaussTest</code>) y explica si son gaussianas y si tiene sentido la simulación <em>bootstrap</em>.</p>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>--------------------------------------------------------
+    Model            AIC           BIC          AICc
+--------------------------------------------------------
+   (A,N,N):        2.1785        2.1929        2.1785
+   (A,N,A):        0.3654        0.4734        0.3654
+   (A,A,N):        2.1830        2.2118        2.1830
+   (A,A,A):        0.2950        0.4174        0.2966
+  (A,Ad,N):        2.1841        2.2201        2.1841
+  (A,Ad,A):        0.5394        0.6689        0.5410
+   (M,N,N):        2.2149        2.2293        2.2149
+   (M,N,A):        0.4167        0.5247        0.4167
+   (M,N,M):        0.4457        0.5536        0.4457
+   (M,A,N):        2.2172        2.2459        2.2172
+   (M,A,A):        0.3334        0.4558        0.3350
+   (M,A,M):        0.5474        0.6698        0.5490
+  (M,Ad,N):        2.2181        2.2541        2.2181
+  (M,Ad,A):        0.3607        0.4903        0.3624
+  (M,Ad,M):        0.5660        0.6955        0.5676
+--------------------------------------------------------
+  Identification time:    0.32583 seconds
+--------------------------------------------------------
+ -------------------------------------------------------------
+  Model: ETS(A,A,A)
+  Box-Cox lambda: 1.00
+  Q-Newton: Function convergence.
+ -------------------------------------------------------------
+                   Param        S.E.          |T|     |Grad|
+ -------------------------------------------------------------
+      Alpha:       0.3367     0.0263      12.7829  1.960e-08
+       Beta:       0.0090     0.0036       2.4722  3.111e-09
+      Gamma:       0.3821     0.0288      13.2834  1.394e-08
+ -------------------------------------------------------------
+   AIC:       0.2950   BIC:       0.4174   AICc:       0.2966
+            Log-Likelihood:     -73.5637
+ -------------------------------------------------------------
+    Summary statistics:
+ -------------------------------------------------------------
+         Missing data:      
+         Q( 1):      26.4152         Q( 4):      33.9828
+         Q( 8):      58.7637         Q(12):      63.1103
+   Bera-Jarque:    1366.6633       P-value:       0.0000
+       H( 206):       0.9863       P-value:       0.4606
+   Outliers (&gt;2.7 ES):    10
+         Q( 1):      60.4878         Q( 4):      85.1360
+         Q( 8):     104.5970         Q(12):     133.6029
+   Bera-Jarque:       8.0994       P-value:       0.0174
+       H( 202):       0.8119       P-value:       0.0698
+ -------------------------------------------------------------</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  x
+W = 0.93852, p-value &lt; 2.2e-16</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  x
+W = 0.97853, p-value &lt; 2.2e-16</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">airpas</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">h</span> <span class="op">=</span> <span class="fl">24</span></span>
+<span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">x</span>, bootstrap <span class="op">=</span> <span class="cn">TRUE</span>, h <span class="op">=</span> <span class="va">h</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># Calculando bandas de confianza empíricas</span></span>
+<span><span class="va">bands</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">h</span>, <span class="fl">2</span><span class="op">)</span>, start<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/start.html">end</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">/</span><span class="fl">12</span>, frequency <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span> <span class="op">:</span> <span class="va">h</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="va">bands</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">ySimul</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co"># Representando predicciones</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">airpas</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">bands</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Tests de gaussianidad de distribución de errores de predicción</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/gaussTest.html">gaussTest</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">ySimul</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/gaussTest.html">gaussTest</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">ySimul</span><span class="op">[</span><span class="fl">12</span>, <span class="op">]</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-6-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end <span class="op">=</span> <span class="st">'2020-02-29'</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, bootstrap<span class="op">=</span><span class="va">True</span>, h<span class="op">=</span>h, verbose<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculando bandas de confianza empíricas</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>bands <span class="op">=</span> ts(np.full((h, <span class="dv">2</span>), np.nan), start<span class="op">=</span>m.yFor.index[<span class="dv">0</span>], freq<span class="op">=</span><span class="st">'m'</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(h):</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    bands.iloc[i] <span class="op">=</span> np.quantile(m.ySimul[i, :], [<span class="fl">0.025</span>, <span class="fl">0.975</span>])</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Representando predicciones</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>plt.plot(airpas[<span class="op">-</span><span class="dv">60</span>:])</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>plt.plot(np.exp(bands))</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>plt.plot(np.exp(m.yFor))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests de gaussianidad de distribución de errores de predicción</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>gaussTest(m.ySimul[<span class="dv">0</span>, ])</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>gaussTest(m.ySimul[<span class="dv">11</span>, ])</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-6-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>clear <span class="bu">all</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>load data</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> log(airpas(<span class="dv">1</span> : <span class="dv">614</span>))<span class="op">;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">24</span><span class="op">;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, <span class="dv">12</span>, bootstrap<span class="op">=</span>true, h <span class="op">=</span> h, verbose<span class="op">=</span>true)<span class="op">;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Calculando bandas de confianza empíricas</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>bands <span class="op">=</span> nan(h, <span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="op">=</span> <span class="dv">1</span> : h</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  bands(i, :) <span class="op">=</span> quantile(m.ySimul(i, :), [<span class="fl">0.025</span> <span class="fl">0.975</span>])<span class="op">;</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>end</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Representando predicciones</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="dv">590</span> : length(airpas)<span class="op">;</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>plot(t, airpas(t), <span class="dv">615</span> : <span class="dv">614</span> <span class="op">+</span> h, exp([bands m.yFor]))</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Tests de gaussianidad de distribución de errores de predicción</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>toolTEST(m.ySimul(<span class="dv">1</span>, :))<span class="op">;</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>toolTEST(m.ySimul(<span class="dv">12</span>, :))<span class="op">;</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section></section><section id="análisis-completo-de-la-serie-de-pasajeros-de-avión" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="análisis-completo-de-la-serie-de-pasajeros-de-avión">
+<span class="header-section-number">4.6</span> Análisis completo de la serie de pasajeros de avión</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-4" role="tab" aria-controls="tabset-7-4" aria-selected="false">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-5" role="tab" aria-controls="tabset-7-5" aria-selected="false">MATLAB/Octave</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<p>Ya estamos en condiciones de realizar un análisis completo de los pasajeros de avión, que puede hacerse siguiendo este ejemplo. El ejercicio de predicción que se propone es para el año 2019, que es el último año después de las profundas perturbaciones debidas a la pandemia. Compararemos los resultados con los de los métodos tipo naive.</p>
+<p>Es conveniente siempre limpiar la memoria y cargar los paquetes necesarios. Genera una serie nueva (por ejemplo, <code>x</code>) que sean los pasajeros de avión hasta finales de 2018. Realiza la predicción para 2019 con cuatro modelos: naive, naive estacional, media anual, ETS y ETS en logaritmos. Indica si el modelo ETS es aceptable mostrando los parámetros, los componentes y los tests. ¿Qué modelo es el que mejor predice el año 2019? Representa gráficamente todas las predicciones con los valores reales.</p>
+<p>Puedes también estimar cuántos pasajeros de avión se han perdido desde marzo de 2020 en adelante.</p>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> -------------------------------------------------------------
+  Model: ETS(M,A,M)
+  Box-Cox lambda: 1.00
+  Q-Newton: Function convergence.
+ -------------------------------------------------------------
+                   Param        S.E.          |T|     |Grad|
+ -------------------------------------------------------------
+      Alpha:       0.3184     0.0263      12.0859  3.553e-07
+       Beta:       0.0078     0.0040       1.9396  1.066e-06
+      Gamma:       0.3705     0.0290      12.7913  1.776e-06
+ -------------------------------------------------------------
+   AIC:      17.3254   BIC:      17.4499   AICc:      17.3270
+            Log-Likelihood:   -5180.6098
+ -------------------------------------------------------------
+    Summary statistics:
+ -------------------------------------------------------------
+         Missing data:      
+         Q( 1):      21.2068         Q( 4):      30.1929
+         Q( 8):      52.6640         Q(12):      55.6965
+   Bera-Jarque:    4270.0498       P-value:       0.0000
+       H( 202):       0.9096       P-value:       0.2507
+   Outliers (&gt;2.7 ES):     9
+         Q( 1):      64.0726         Q( 4):      93.2012
+         Q( 8):     107.5363         Q(12):     135.1078
+   Bera-Jarque:       7.1247       P-value:       0.0284
+       H( 198):       0.8127       P-value:       0.0727
+ -------------------------------------------------------------</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary statistics:
+==================
+                        Serie 1
+Data points:          596.00000
+Missing:               12.00000
+Minimum:               -0.16129
+1st quartile:          -0.02145
+Mean:                   0.00217
+P(Mean = 0):            0.26186
+Median:                 0.00263
+3rd quartile:           0.02881
+Maximum:                0.43473
+Interquartile range:    0.05025
+Range:                  0.59602
+Satandard deviation:    0.04678
+Variance:               0.00219
+Skewness:               1.05824
+Kurtosis:              12.82666
+Autocorrelation tests:
+=====================
+     SACF sa      LB p.val  SPACF sp
+1   0.184  +  19.854     0  0.184  +
+2   0.086  +  24.203     0  0.054  .
+3   0.019  .  24.419     0 -0.006  .
+4   0.087  +  28.873     0  0.083  +
+5  -0.115  -  36.731     0 -0.152  -
+6  -0.113  -  44.305     0 -0.082  .
+7  -0.079  .  48.002     0 -0.029  .
+8  -0.060  .  50.127     0 -0.040  .
+9  -0.023  .  50.447     0  0.027  .
+10  0.038  .  51.310     0  0.051  .
+11  0.032  .  51.904     0  0.003  .
+12  0.048  .  53.299     0  0.027  .
+13  0.240  +  87.908     0  0.222  +
+14  0.093  +  93.154     0 -0.009  .
+15  0.027  .  93.577     0 -0.016  .
+16 -0.008  .  93.615     0 -0.010  .
+17 -0.031  .  94.181     0 -0.075  .
+18 -0.118  - 102.612     0 -0.059  .
+19 -0.191  - 124.817     0 -0.120  -
+20 -0.107  - 131.815     0 -0.028  .
+21 -0.007  . 131.843     0  0.068  .
+22 -0.014  . 131.967     0  0.000  .
+23  0.032  . 132.611     0  0.027  .
+24 -0.015  . 132.746     0 -0.068  .
+25  0.156  + 147.570     0  0.128  +
+Gaussianity tests:
+=================
+
+    Shapiro-Wilk normality test
+
+data:  x
+W = 0.91717, p-value &lt; 2.2e-16
+
+Ratio of variance tests:
+=======================
+ Portion_of_data F_statistic p.value
+         0.33333      0.9149  0.5374</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     ME     RMSE       MAE         MPE     PRMSE      MAPE
+naive        -5053.6817 6714.306 5430.9235 -19.6385890 25.959385 22.034494
+naiveS       -1059.6768 1118.936 1059.6768  -4.9411708  5.236211  4.941171
+mediaAnual   -1059.6768 4545.890 4167.7368  -0.6446591 20.999410 19.319335
+m$yFor         695.0559 1080.267  805.5044   2.6233379  4.216031  3.315608
+exp(ml$yFor)   959.6937 1356.295 1043.8803   3.7791764  5.327165  4.311714
+                 sMAPE     MASE     RelMAE Theil's U
+naive        26.008694 9.334455 0.19049909 1.9629025
+naiveS        5.082549 1.821330 0.03717001 0.3959328
+mediaAnual   19.361054 7.163340 0.14619062 1.5878571
+m$yFor        3.235855 1.384469 0.02825447 0.3187926
+exp(ml$yFor)  4.179551 1.794180 0.03661592 0.4028102</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Los modelos elementales producen predicciones mejores que los modelos más sofisticados. Esto resulta bastante desesperanzador, pero no debemos olvidar que estamos evaluando los modelos sobre un solo origen de predicción. Esto es bastante inapropiado, puesto que un buen modelo será aquel que produzca mejores predicciones de forma sistemática, es decir, con varios orígenes de predicción, que es lo que haremos más adelante.</p>
+</div>
+<div id="tabset-7-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-3-tab">
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Limpiando memoria</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Cargando librerías</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">UComp</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="co"># Seleccionando muestra</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">airpas</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Transformando variable</span></span>
+<span><span class="va">xl</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co"># Horizonte de predicción y periodo estacional</span></span>
+<span><span class="va">h</span> <span class="op">=</span> <span class="fl">12</span>   <span class="co"># Horizonte de predicción</span></span>
+<span><span class="va">m</span> <span class="op">=</span> <span class="fl">12</span>   <span class="co"># Observaciones por año</span></span>
+<span><span class="co"># Estimando predicciones</span></span>
+<span><span class="va">naive</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">)</span>, <span class="va">h</span><span class="op">)</span>, start <span class="op">=</span> <span class="fl">2019</span>, frequency <span class="op">=</span> <span class="va">m</span><span class="op">)</span></span>
+<span><span class="va">naiveS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">h</span><span class="op">)</span>, start <span class="op">=</span> <span class="fl">2019</span>, frequency <span class="op">=</span> <span class="va">m</span><span class="op">)</span></span>
+<span><span class="va">mediaAnual</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">m</span><span class="op">)</span><span class="op">)</span>, <span class="va">h</span><span class="op">)</span>, start <span class="op">=</span> <span class="fl">2019</span>, frequency <span class="op">=</span> <span class="va">m</span><span class="op">)</span></span>
+<span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">x</span>, h <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span>
+<span><span class="va">ml</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, h <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span>
+<span><span class="co"># Muestra estimación de modelo sin logaritmos</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># Muestra componentes</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># Tests de modelo sin logaritmos</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/tests.html">tests</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># Matriz con todas las predicciones</span></span>
+<span><span class="va">predicciones</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">naive</span>, <span class="va">naiveS</span>, <span class="va">mediaAnual</span>, <span class="va">m</span><span class="op">$</span><span class="va">yFor</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">ml</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Precisión de predicciones</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/Accuracy.html">Accuracy</a></span><span class="op">(</span><span class="va">predicciones</span>, <span class="va">airpas</span><span class="op">)</span></span>
+<span><span class="co"># Representación gráfica</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">airpas</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="va">predicciones</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-7-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> UComp <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionando muestra</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(airpas, end<span class="op">=</span><span class="st">'2018-12-31'</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformando variable</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>xl <span class="op">=</span> np.log(x)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizonte de predicción y periodo estacional</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">12</span>   <span class="co"># Horizonte de predicción</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> <span class="dv">12</span>   <span class="co"># Observaciones por año</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimando predicciones</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, h <span class="op">=</span> h)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>ml <span class="op">=</span> ETS(np.log(x), h <span class="op">=</span> h)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>naive <span class="op">=</span> ts(x[<span class="op">-</span><span class="dv">1</span>].repeat(h), start<span class="op">=</span>m.yFor.index[<span class="dv">0</span>], freq<span class="op">=</span><span class="st">'m'</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>naiveS <span class="op">=</span> ts(x[<span class="op">-</span><span class="dv">12</span>:].repeat(<span class="dv">1</span>), start<span class="op">=</span>m.yFor.index[<span class="dv">0</span>], freq<span class="op">=</span><span class="st">'m'</span>)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>mediaAnual <span class="op">=</span> ts(np.mean(x[<span class="op">-</span><span class="dv">12</span>:]).repeat(h), start<span class="op">=</span>m.yFor.index[<span class="dv">0</span>], freq<span class="op">=</span><span class="st">'m'</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Muestra estimación de modelo sin logaritmos</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>m.validate()</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Muestra componentes</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>m.plot()</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests de modelo sin logaritmos</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>tests(m)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz con todas las predicciones</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>predicciones <span class="op">=</span> pd.concat((naive, naiveS, mediaAnual, m.yFor, np.exp(ml.yFor)), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Precisión de predicciones</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>Accuracy(predicciones, airpas)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Representación gráfica</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>plt.plot(airpas[<span class="op">-</span><span class="dv">60</span>:])</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>plt.plot(predicciones)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-7-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Limpiando memoria y cargando datos</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>clear <span class="bu">all</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>load data</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Seleccionando muestra</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> airpas(<span class="dv">1</span> : <span class="dv">600</span>)<span class="op">;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Transformando variable</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>xl <span class="op">=</span> log(x)<span class="op">;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Horizonte de predicción y periodo estacional</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">12</span><span class="op">;</span>   <span class="op">%</span> Horizonte de predicción</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Estimando predicciones</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>naive <span class="op">=</span> repmat(x(end), h, <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>naiveS <span class="op">=</span> x(end <span class="op">-</span> h <span class="op">+</span> <span class="dv">1</span> : end)<span class="op">;</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>mediaAnual <span class="op">=</span> repmat(mean(x(end <span class="op">-</span> h <span class="op">+</span> <span class="dv">1</span> : end)), h, <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, <span class="dv">12</span>, h <span class="op">=</span> h)<span class="op">;</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>ml <span class="op">=</span> ETS(log(x), <span class="dv">12</span>, h <span class="op">=</span> h)<span class="op">;</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Muestra estimación de modelo sin logaritmos</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>ETSvalidate(m)<span class="op">;</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Muestra componentes</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>stackedplot(m.comp)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Tests de modelo sin logaritmos</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>toolTEST(m.v)<span class="op">;</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Matriz con todas las predicciones</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>predicciones <span class="op">=</span> [naive, naiveS, mediaAnual, m.yFor, exp(ml.yFor)]<span class="op">;</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Precisión de predicciones</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>Accuracy(predicciones, airpas(<span class="dv">1</span> : <span class="dv">600</span> <span class="op">+</span> h), <span class="dv">12</span>)</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Representación gráfica</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> (<span class="dv">553</span> : length(airpas))<span class="st">';</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="er">plot</span>(t, airpas(t), (<span class="dv">601</span> : <span class="dv">600</span> <span class="op">+</span> h), predicciones)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="bibliografía" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="bibliografía"><strong>Bibliografía</strong></h2>
+<p>Hyndman, R., Koehler, A.B., Ord, J.K. (2008), Forecasting with Exponential Smoothing: The State Space Approach. Springer Series in Statistics.</p>
+<p>Hyndman, R.J., &amp; Athanasopoulos, G. (2021) Forecasting: principles and practice, 3rd edition, OTexts: Melbourne, Australia. OTexts.com/fpp3.</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./02-etsSSOE.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Suavizado Exponencial</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04-etsMSOE.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Suavizado Exponencial con mútiples ruidos</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
