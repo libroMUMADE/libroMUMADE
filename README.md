@@ -1,2 +1,2 @@
 ### LibroMUMADE
-Dirección WEB: https://djpedregal.github.io/LibroGE/
+Dirección WEB: https://libroMUMADE.github.io/libroMUMADE/
