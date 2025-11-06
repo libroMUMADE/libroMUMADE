@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.8.25">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Analítica predictiva avanzada - 4&nbsp; Suavizado exponencial en Espacio de los Estados</title>
+<title>4&nbsp; Suavizado exponencial en Espacio de los Estados – Analítica predictiva avanzada</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -18,6 +18,7 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -62,52 +63,88 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <link href="./04-etsMSOE.html" rel="next">
 <link href="./02-etsSSOE.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
-    "search-no-results-text": "Sin resultados",
+    "search-no-results-text": "No se han encontrado resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
     "search-more-match-text": "resultado adicional en este documento",
     "search-more-matches-text": "resultados adicionales en este documento",
     "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancelar",
     "search-submit-button-title": "Enviar",
     "search-label": "Buscar"
   }
-}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 </head>
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-etsSSOEenSS.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Suavizado exponencial en Espacio de los Estados</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-etsSSOEenSS.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Suavizado exponencial en Espacio de los Estados</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Analítica predictiva avanzada</a> 
     </div>
@@ -175,7 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Índice</h2>
@@ -220,11 +257,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header><p>Hasta ahora hemos contemplado el suavizado exponencial como un método de predicción, es decir, como un conjunto de reglas más o menos inteligentes para predecir series temporales. En este capítulo los vamos a tratar como un modelo formal estadístico. Todos los métodos de suavizado exponencial vistos se pueden encuadrar dentro de un marco general que es el de <strong>Espacio de los Estados</strong>.</p>
 <p>Existen múltiples formas de Espacio de los Estados. Por conveniencia, en este capítulo nos centraremos en la forma de Espacio de los Estados <strong>en forma de innovaciones</strong>, que tiene la peculiaridad de depender de un solo ruido aleatorio, también se suelen llamar sistemas con una sola fuente de ruido (<em>Sigle Source of Error</em> o SSOE en inglés). En el siguiente capítulo se aboradarán los modelos en forma de Espacio de los Estados con múltiples ruidos (<em>Multiple Source of Error</em> o MSOE) que se utilizarán en la especificación de otra familia de modelos de suavizado exponencial.</p>
 <section id="modelos-ssoe-de-espacio-de-los-estados" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="modelos-ssoe-de-espacio-de-los-estados">
 <span class="header-section-number">4.1</span> Modelos SSOE de Espacio de los Estados</h2>
-<p>La formulación con una sola fuente de ruido del modelo de espacio de los estados que vamos a utilizar en este capítulo se encuentra en la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a>.</p>
+<p>La formulación con una sola fuente de ruido del modelo de espacio de los estados que vamos a utilizar en este capítulo se encuentra en la <a href="#eq-sysinnLinear" class="quarto-xref">Ecuación&nbsp;<span>4.1</span></a>.</p>
 <p><span id="eq-sysinnLinear"><span class="math display">\[
 \begin{array}{rl}
     \text{Ecuación de observación:} &amp;    y_t = w x_{t-1} + \epsilon_t \\
@@ -232,16 +270,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 \end{array}
 \tag{4.1}\]</span></span></p>
 <p>Dicho sistema está compuesto por dos ecuaciones ligadas entre sí por dos elementos, <span class="math inline">\(x_t\)</span> y <span class="math inline">\(\epsilon\)</span>. La <strong>ecuación de transición</strong> refleja el comportamiento dinámico del sistema al conectar el vector de estados <span class="math inline">\(x_t\)</span> de dimensión <span class="math inline">\(n\)</span> con su pasado y una perturbación escalar <span class="math inline">\(\epsilon_t\)</span>, que se supone normal con media cero y varianza constante <span class="math inline">\(\sigma^2\)</span>. La <strong>ecuación de observación</strong> relaciona los datos de salida escalar <span class="math inline">\(y_t\)</span> con los estados y la perturbación. Los demás elementos son las matrices del sistema de dimensiones apropiadas. En particular, <span class="math inline">\(F\)</span> es una matriz cuadrada <span class="math inline">\(n\times n\)</span>, <span class="math inline">\(g\)</span> es la matriz de ganancias <span class="math inline">\(n \times 1\)</span> y <span class="math inline">\(w\)</span> es un vector <span class="math inline">\(1 \times n\)</span>.</p>
-<p>Para poder encajar los modelos no lineales es necesario generalizar el modelo, ver la <a href="#eq-sysNoLineal">Ecuación&nbsp;<span>4.2</span></a>.</p>
+<p>Para poder encajar los modelos no lineales es necesario generalizar el modelo, ver la <a href="#eq-sysNoLineal" class="quarto-xref">Ecuación&nbsp;<span>4.2</span></a>.</p>
 <p><span id="eq-sysNoLineal"><span class="math display">\[
 \begin{array}{rl}
        \text{Ecuación de observación:} &amp; y_t = w(x_{t-1}) + r(x_{t-1})\epsilon_t \\
         \text{Ecuación de transición:} &amp; x_{t} = f(x_{t-1}) + g(x_{t-1}) \epsilon_{t}
 \end{array}
 \tag{4.2}\]</span></span></p>
-<p>La diferencia con el sistema lineal es que en esta ecuación <span class="math inline">\(f(x_{t-1})\)</span>, <span class="math inline">\(g(x_{t-1})\)</span>, <span class="math inline">\(w(x_{t-1})\)</span> y <span class="math inline">\(r(x_{t-1})\)</span> son funciones no lineales del vector de estados. Evidentemente, si se escogen funciones lineales y <span class="math inline">\(r(x_{t-1})=1\)</span> se obtiene como caso particular la versión lineal en la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a>.</p>
+<p>La diferencia con el sistema lineal es que en esta ecuación <span class="math inline">\(f(x_{t-1})\)</span>, <span class="math inline">\(g(x_{t-1})\)</span>, <span class="math inline">\(w(x_{t-1})\)</span> y <span class="math inline">\(r(x_{t-1})\)</span> son funciones no lineales del vector de estados. Evidentemente, si se escogen funciones lineales y <span class="math inline">\(r(x_{t-1})=1\)</span> se obtiene como caso particular la versión lineal en la <a href="#eq-sysinnLinear" class="quarto-xref">Ecuación&nbsp;<span>4.1</span></a>.</p>
 <p>Hay un detalle que en principio puede parece trivial, pero que hace este sistema singular y especialmente fácil de tratar. Se trata de que hay una sola fuente de ruido aleatorio, <span class="math inline">\(\epsilon_t\)</span>. Esto hace que los estados sean observables sin ninguna incertidumbre y, con una sencilla manipulación y conocido el vector de estados inicial <span class="math inline">\(x_0\)</span>, se puedan obtener recursivamente dichos estados.</p>
-<p>En efecto, si en el sistema lineal de la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a> se despeja la perturbación de la ecuación de observación (<span class="math inline">\(\epsilon_t = y_t - w x_{t-1}\)</span>) y se sustituye en la ecuación de transición tenemos que,</p>
+<p>En efecto, si en el sistema lineal de la <a href="#eq-sysinnLinear" class="quarto-xref">Ecuación&nbsp;<span>4.1</span></a> se despeja la perturbación de la ecuación de observación (<span class="math inline">\(\epsilon_t = y_t - w x_{t-1}\)</span>) y se sustituye en la ecuación de transición tenemos que,</p>
 <p><span class="math display">\[
 x_t=F x_{t-1} + g (y_t - w x_{t-1}).
 \]</span></p>
@@ -254,16 +292,20 @@ x_t=f(x_{t-1}) + g(x_{t-1}) [y_t - w(x_{t-1})]/r(x_{t-1}).
 <span class="header-section-number">4.2</span> Modelos de suavizado exponencial en forma de Espacio de los Estados</h2>
 <p>El modelo de suavizado exponencial está formado por combinaciones particulares de los componentes que se consideren apropiados en cada caso. A continuación se consideran los modelos más habituales para cada componente con su forma de espacio de los estados que se encuentran disponibles en el paquete <strong>UComp</strong>.</p>
 <p>Los componentes que vamos a considerar son el nivel <span class="math inline">\(l_t\)</span>, pendiente <span class="math inline">\(b_t\)</span>, estacionalidad <span class="math inline">\(s_t\)</span> y ruido <span class="math inline">\(\epsilon_t\)</span>. En general los modelos particulares de los componentes dependen de si se incluyen estacionalidad y de si el ruido es aditivo o multiplicativo.</p>
-<p>Las formas de espacio de los estados de las quince combinaciones posibles con ruido aditivo se encuentran en la <a href="#fig-tabETS">Figura&nbsp;<span>4.1</span></a>.</p>
+<p>Las formas de espacio de los estados de las quince combinaciones posibles con ruido aditivo se encuentran en la <a href="#fig-tabETS" class="quarto-xref">Figura&nbsp;<span>4.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-tabETS" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="tabETS.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figura&nbsp;4.1: Forma de espacio de los estados de modelos de suavizado exponencial con ruido aditivo.</figcaption></figure>
+<div id="fig-tabETS" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-tabETS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="tabETS.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tabETS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.1: Forma de espacio de los estados de modelos de suavizado exponencial con ruido aditivo.
+</figcaption></figure>
 </div>
 </div>
 </div>
-<p>Todos los modelos con algún componente multiplicativo tienen necesariamente una representación en forma de espacio de estados no lineales de acuerdo con la <a href="#eq-sysNoLineal">Ecuación&nbsp;<span>4.2</span></a>, el resto son lineales como en la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a>. La <a href="#fig-tabETSss">Figura&nbsp;<span>4.2</span></a> muestra las matrices del sistema de espacio de los estados lineal o no lineal con la que se puede representar cada uno de los que aparecen en la <a href="#fig-tabETS">Figura&nbsp;<span>4.1</span></a>. Por razones de espacio, los modelos no lineales con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>. En todos ellos se ha utilizado la matriz de transición <span class="math inline">\(\Phi\)</span> del componente estacional aditivo, cuya definición es la siguiente</p>
+<p>Todos los modelos con algún componente multiplicativo tienen necesariamente una representación en forma de espacio de estados no lineales de acuerdo con la <a href="#eq-sysNoLineal" class="quarto-xref">Ecuación&nbsp;<span>4.2</span></a>, el resto son lineales como en la <a href="#eq-sysinnLinear" class="quarto-xref">Ecuación&nbsp;<span>4.1</span></a>. La <a href="#fig-tabETSss" class="quarto-xref">Figura&nbsp;<span>4.2</span></a> muestra las matrices del sistema de espacio de los estados lineal o no lineal con la que se puede representar cada uno de los que aparecen en la <a href="#fig-tabETS" class="quarto-xref">Figura&nbsp;<span>4.1</span></a>. Por razones de espacio, los modelos no lineales con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas" class="quarto-xref">Figura&nbsp;<span>4.5</span></a>. En todos ellos se ha utilizado la matriz de transición <span class="math inline">\(\Phi\)</span> del componente estacional aditivo, cuya definición es la siguiente</p>
 <p><span class="math display">\[
 \Phi=\left[
 \begin{array}{ccccc}
@@ -277,48 +319,64 @@ x_t=f(x_{t-1}) + g(x_{t-1}) [y_t - w(x_{t-1})]/r(x_{t-1}).
 \]</span></p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-tabETSss" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="tabETSss.png" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption class="figure-caption">Figura&nbsp;4.2: Matrices del sistema de cada uno de los modelos con ruido aditivo.</figcaption></figure>
+<div id="fig-tabETSss" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-tabETSss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="tabETSss.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tabETSss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.2: Matrices del sistema de cada uno de los modelos con ruido aditivo.
+</figcaption></figure>
 </div>
 </div>
 </div>
-<p>En el caso de los modelos con ruido multiplicativo todos son no lineales y se muestran en la <a href="#fig-tabETSm">Figura&nbsp;<span>4.3</span></a>.</p>
+<p>En el caso de los modelos con ruido multiplicativo todos son no lineales y se muestran en la <a href="#fig-tabETSm" class="quarto-xref">Figura&nbsp;<span>4.3</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-tabETSm" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="tabETSm.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figura&nbsp;4.3: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo</figcaption></figure>
+<div id="fig-tabETSm" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-tabETSm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="tabETSm.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tabETSm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.3: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo
+</figcaption></figure>
 </div>
 </div>
 </div>
-<p>La <a href="#fig-tabETSmss">Figura&nbsp;<span>4.4</span></a> muestra las matrices del sistema no lineal de espacio de los estados. Los modelos con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>.</p>
+<p>La <a href="#fig-tabETSmss" class="quarto-xref">Figura&nbsp;<span>4.4</span></a> muestra las matrices del sistema no lineal de espacio de los estados. Los modelos con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas" class="quarto-xref">Figura&nbsp;<span>4.5</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-tabETSmss" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="tabETSmss.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figura&nbsp;4.4: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo</figcaption></figure>
+<div id="fig-tabETSmss" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-tabETSmss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="tabETSmss.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tabETSmss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.4: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo
+</figcaption></figure>
 </div>
 </div>
 </div>
-<p>Finalmente, todos los modelos con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>.</p>
+<p>Finalmente, todos los modelos con estacionalidad multiplicativa se muestran en la <a href="#fig-tabETSmseas" class="quarto-xref">Figura&nbsp;<span>4.5</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-tabETSmseas" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="tabETSmseas.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figura&nbsp;4.5: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo</figcaption></figure>
+<div id="fig-tabETSmseas" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-tabETSmseas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="tabETSmseas.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tabETSmseas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.5: Forma de espacio de los estados de modelos de suavizado exponencial con ruido multiplicativo
+</figcaption></figure>
 </div>
 </div>
 </div>
 <p>El lector puede comprobar que efectivamente las matrices del sistema de las tablas anteriores reproducen los modelos que efectivamente se quieren representar. A continuación se proponen dos ejemplos con sus soluciones.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Resuelve</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solución</a></li>
 </ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p>Comprueba que efectivamente se obtiene el modelo ETS(A,A,A) utilizando las matrices del sistema de la <a href="#fig-tabETSss">Figura&nbsp;<span>4.2</span></a>.</p>
+<p>Comprueba que efectivamente se obtiene el modelo ETS(A,A,A) utilizando las matrices del sistema de la <a href="#fig-tabETSss" class="quarto-xref">Figura&nbsp;<span>4.2</span></a>.</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>El sistema es lineal, por lo que se podrá escribir como</p>
@@ -339,7 +397,7 @@ x_t=f(x_{t-1}) + g(x_{t-1}) [y_t - w(x_{t-1})]/r(x_{t-1}).
        \epsilon_t
 \end{array}.
 \]</span></p>
-<p>Operando tenemos las ecuaciones de la <a href="#fig-tabETS">Figura&nbsp;<span>4.1</span></a>:</p>
+<p>Operando tenemos las ecuaciones de la <a href="#fig-tabETS" class="quarto-xref">Figura&nbsp;<span>4.1</span></a>:</p>
 <p><span class="math display">\[
 \begin{array}{l}
 y_t=l_{t-1}+b_{t-1}+s_{t-4} \\
@@ -354,15 +412,15 @@ s_t=s_{t-4}+\gamma \epsilon_t
 <p><br></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Resuelve</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solución</a></li>
 </ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<p>Comprueba que efectivamente se obtiene el modelo ETS(M,M,M) utilizando las matrices del sistema de la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>.</p>
+<p>Comprueba que efectivamente se obtiene el modelo ETS(M,M,M) utilizando las matrices del sistema de la <a href="#fig-tabETSmseas" class="quarto-xref">Figura&nbsp;<span>4.5</span></a>.</p>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<p>El sistema es no lineal, por lo que tendremos que utilizar el sistema de la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a>.</p>
+<p>El sistema es no lineal, por lo que tendremos que utilizar el sistema de la <a href="#eq-sysinnLinear" class="quarto-xref">Ecuación&nbsp;<span>4.1</span></a>.</p>
 <p><span class="math display">\[
 \begin{array}{l}
 y_t=l_{t-1}b_{t-1}s_{t-4}+l_{t-1}b_{t-1}s_{t-4}\epsilon_t \\
@@ -377,7 +435,7 @@ x_t=\left[\begin{array}{c} l_t \\ b_t \\ s_t \\ s_{t-1} \\ s_{t-2} \\ s_{t-3}\en
 \left[\begin{array}{c} \alpha l_{t-1}b_{t-1} \\ \beta b_{t-1} \\ \gamma s_{t-4} \\ 0 \\ 0 \\ 0\end{array} \right] \epsilon_t
 \end{array}
 \]</span></p>
-<p>Operando tenemos las ecuaciones de la <a href="#fig-tabETSmseas">Figura&nbsp;<span>4.5</span></a>:</p>
+<p>Operando tenemos las ecuaciones de la <a href="#fig-tabETSmseas" class="quarto-xref">Figura&nbsp;<span>4.5</span></a>:</p>
 <p><span class="math display">\[
 \begin{array}{l}
 y_t=l_{t-1}b_{t-1}s_{t-4}+l_{t-1}b_{t-1}s_{t-4}\epsilon_t=l_{t-1}b_{t-1}s_{t-4}(1+\epsilon_t) \\
@@ -422,7 +480,7 @@ p(y_1,y_2,\dots,y_T)=p(Y_T)=\prod_{t=1}^Tp(y_t|Y_{t-1}),
 <span class="header-section-number">4.3.2</span> Estimación MV de modelos de espacio de los estados</h3>
 <p>Todos los modelos vistos en este capítulo dependen de una serie de parámetros, que en general, serán desconocidos cuando se estén analizando series temporales particulares. Estos parámetros son <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span>, <span class="math inline">\(\phi\)</span> y <span class="math inline">\(\sigma^2\)</span>. Además, debemos recordar que el valor de los estados depende crucialmente del vector de estados inicial de los mismos, que se han considerado conocidos hasta el momento, pero que en casos reales no lo son. En muestras largas, el efecto de las condiciones iniciales tiende a diluirse, pero no sucede lo mismo con muestras cortas.</p>
 <!-- El procedimiento de estimación más habitual es **Máxima Verosimilitud**, que consiste en elegir los parámetros (y las condiciones iniciales) de forma que se maximice la probabilidad de que efectivamente suceda lo observado en la muestra. Es decir, se trata de encontrar los parámetros que maximicen la probabilidad de la muestra empíricamente observada. Para hacer este cálculo asumimos que el modelo es correcto y la función de distribución de los datos es normal (algo que se puede comprobar a posteriori en el diagnóstico del modelo). -->
-<p>Todo lo dicho hasta el momento se ha hecho con el fin de poder establecer el tratamiento estadístico de los modelos sobre la base de la forma general de espacio de los estados, en lugar de tener que ir particularizando para cada modelo concreto. Así el resto del capítulo se referirá únicamente a la forma general de la <a href="#eq-sysinnLinear">Ecuación&nbsp;<span>4.1</span></a> y la <a href="#eq-sysNoLineal">Ecuación&nbsp;<span>4.2</span></a>, entendiendo que los resultados son válidos para todos los casos particulares.</p>
+<p>Todo lo dicho hasta el momento se ha hecho con el fin de poder establecer el tratamiento estadístico de los modelos sobre la base de la forma general de espacio de los estados, en lugar de tener que ir particularizando para cada modelo concreto. Así el resto del capítulo se referirá únicamente a la forma general de la <a href="#eq-sysinnLinear" class="quarto-xref">Ecuación&nbsp;<span>4.1</span></a> y la <a href="#eq-sysNoLineal" class="quarto-xref">Ecuación&nbsp;<span>4.2</span></a>, entendiendo que los resultados son válidos para todos los casos particulares.</p>
 <!-- Partiendo de la fórmula de la probabilidad conjunta que afirma que $p(y_1,y_2)=p(y_1)p(y_2|y_1)$ podemos ver que para tres variables aleatorias tenemos -->
 <!-- $$ -->
 <!-- p(y_1,y_2,y_3)=p(y_1,y_2)p(y_3|y_1,y_2)=p(y_1)p(y_2|y_1)p(y_3|y_1,y_2). -->
@@ -436,7 +494,7 @@ p(y_1,y_2,\dots,y_T)=p(Y_T)=\prod_{t=1}^Tp(y_t|Y_{t-1}),
 <p><span class="math display">\[
     p(y_t|Y_{t-1})= (2\pi \sigma^2)^{-1/2} \exp \left[ -\frac{(y_t-wx_{t-1})^2}{2\sigma^2} \right]=
      (2\pi \sigma^2)^{-1/2} \exp \left( -\frac{\epsilon_t^2}{2 \sigma^2} \right)
-\]</span> La <a href="#eq-MVgeneral">Ecuación&nbsp;<span>4.3</span></a> nos permite escribir la función de probabilidad de una forma sencilla,</p>
+\]</span> La <a href="#eq-MVgeneral" class="quarto-xref">Ecuación&nbsp;<span>4.3</span></a> nos permite escribir la función de probabilidad de una forma sencilla,</p>
 <p><span id="eq-MVlineal"><span class="math display">\[
 p(Y_t)= (2\pi \sigma^2)^{-T/2} \prod_{t=1}^T \exp \left(  - \frac{\epsilon_t^2}{2\sigma^2} \right)
 \tag{4.4}\]</span></span></p>
@@ -476,11 +534,11 @@ f(\theta,x_0|Y_T) = T \log(\sum \epsilon_t^2) + 2 \sum_{t=1}^T \log\left| r(x_{t
 <!-- La matriz de varianzas y covarianzas de los estimadores se pueden calcular con ayuda del hessiano de la función de verosimilitud, en particular,  --><p>El problema de estimación, entonces, consiste en encontrar los valores de los parámetros (incluyendo las condiciones iniciales) que minimiza dicha función con algún algoritmo de optimización numérico. Tanto este como otros detalles más técnicos quedan fuera del alcance de este libro y el lector interesado puede acudir a la bibliografía.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Resuelve</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Solución</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">R</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">Python</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-5" role="tab" aria-controls="tabset-3-5" aria-selected="false">MATLAB/Octave</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false" href="">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false" href="">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-5" role="tab" aria-controls="tabset-3-5" aria-selected="false" href="">MATLAB/Octave</a></li>
 </ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
@@ -496,29 +554,32 @@ f(\theta,x_0|Y_T) = T \log(\sum \epsilon_t^2) + 2 \sum_{t=1}^T \log\left| r(x_{t
  -------------------------------------------------------------
                    Param        S.E.          |T|     |Grad|
  -------------------------------------------------------------
-      Alpha:       0.3367     0.0263      12.7829  1.960e-08
+      Alpha:       0.3367     0.0263      12.7828  1.960e-08
        Beta:       0.0090     0.0036       2.4722  3.111e-09
-      Gamma:       0.3821     0.0288      13.2834  1.394e-08
+      Gamma:       0.3821     0.0288      13.2839  1.394e-08
  -------------------------------------------------------------
    AIC:       0.2950   BIC:       0.4174   AICc:       0.2966
             Log-Likelihood:     -73.5637
  -------------------------------------------------------------
     Summary statistics:
  -------------------------------------------------------------
-         Missing data:      
+         Observations:   614        Missing data:      
          Q( 1):      26.4152         Q( 4):      33.9828
          Q( 8):      58.7637         Q(12):      63.1103
    Bera-Jarque:    1366.6633       P-value:       0.0000
-       H( 206):       0.9863       P-value:       0.4606
+        H(206):       0.9863       P-value:       0.9286
    Outliers (&gt;2.7 ES):    10
          Q( 1):      60.4878         Q( 4):      85.1360
          Q( 8):     104.5970         Q(12):     133.6029
    Bera-Jarque:       8.0994       P-value:       0.0174
-       H( 202):       0.8119       P-value:       0.0698
+        H(202):       0.8119       P-value:       0.1753
  -------------------------------------------------------------</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary statistics:
@@ -581,14 +642,17 @@ Ratio of variance tests:
          0.33333      0.9808  0.8918</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>El modelo NO es apropiado porque hay autocorrelación, la distribución de las innovaciones no son normales, aunque seguramente no hay problemas de heterocedasticidad. Es decir, la transformación logarítmica parece adecuada.</p>
 </div>
 <div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Cargando librería</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Cargando librería</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">UComp</span><span class="op">)</span></span>
 <span><span class="co"># Seleccionando muestra</span></span>
@@ -600,12 +664,12 @@ Ratio of variance tests:
 <span><span class="co"># Mostrando componentes</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
 <span><span class="co"># Tests de innovaciones</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/tests.html">tests</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/tests.html">tests</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargando librerías</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargando librerías</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> UComp <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionando muestra hasta febrero 2020</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end<span class="op">=</span><span class="st">'2020-02-29'</span>)</span>
@@ -616,12 +680,12 @@ Ratio of variance tests:
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrando componentes</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>m.plot()</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests de innovaciones</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>tests(m)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>tests(m)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-3-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-5-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Cargando datos</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Cargando datos</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>load data</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Seleccionando muestra hasta febrero <span class="dv">2020</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> log(airpas(<span class="dv">1</span> : <span class="dv">614</span>))<span class="op">;</span></span>
@@ -632,7 +696,7 @@ Ratio of variance tests:
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Mostrando componentes</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>stackedplot(m.comp)</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Tests de innovaciones</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>toolTEST(m.v)<span class="op">;</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>toolTEST(m.v)<span class="op">;</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -653,11 +717,11 @@ Ratio of variance tests:
 <p>Dado que los criterios de información son función de la función de verosimilitud en el óptimo con signo menos, el mejor modelo será aquel que minimice el criterio en cuestión. El más utilizado en este contexto es <span class="math inline">\(AICc\)</span>.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Resuelve</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Solución</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">R</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false">Python</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-5" role="tab" aria-controls="tabset-4-5" aria-selected="false">MATLAB/Octave</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false" href="">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false" href="">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-5" role="tab" aria-controls="tabset-4-5" aria-selected="false" href="">MATLAB/Octave</a></li>
 </ul>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
@@ -684,9 +748,9 @@ Ratio of variance tests:
    (M,A,M):        0.5474        0.6698        0.5490
   (M,Ad,N):        2.2181        2.2541        2.2181
   (M,Ad,A):        0.3607        0.4903        0.3624
-  (M,Ad,M):        0.5660        0.6955        0.5676
+  (M,Ad,M):        0.5666        0.6962        0.5683
 --------------------------------------------------------
-  Identification time:    0.30084 seconds
+  Identification time:    0.25030 seconds
 --------------------------------------------------------
  -------------------------------------------------------------
   Model: ETS(A,A,A)
@@ -695,25 +759,25 @@ Ratio of variance tests:
  -------------------------------------------------------------
                    Param        S.E.          |T|     |Grad|
  -------------------------------------------------------------
-      Alpha:       0.3367     0.0263      12.7829  1.960e-08
+      Alpha:       0.3367     0.0263      12.7828  1.960e-08
        Beta:       0.0090     0.0036       2.4722  3.111e-09
-      Gamma:       0.3821     0.0288      13.2834  1.394e-08
+      Gamma:       0.3821     0.0288      13.2839  1.394e-08
  -------------------------------------------------------------
    AIC:       0.2950   BIC:       0.4174   AICc:       0.2966
             Log-Likelihood:     -73.5637
  -------------------------------------------------------------
     Summary statistics:
  -------------------------------------------------------------
-         Missing data:      
+         Observations:   614        Missing data:      
          Q( 1):      26.4152         Q( 4):      33.9828
          Q( 8):      58.7637         Q(12):      63.1103
    Bera-Jarque:    1366.6633       P-value:       0.0000
-       H( 206):       0.9863       P-value:       0.4606
+        H(206):       0.9863       P-value:       0.9286
    Outliers (&gt;2.7 ES):    10
          Q( 1):      60.4878         Q( 4):      85.1360
          Q( 8):     104.5970         Q(12):     133.6029
    Bera-Jarque:       8.0994       P-value:       0.0174
-       H( 202):       0.8119       P-value:       0.0698
+        H(202):       0.8119       P-value:       0.1753
  -------------------------------------------------------------</code></pre>
 </div>
 </div>
@@ -721,20 +785,20 @@ Ratio of variance tests:
 </div>
 <div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">airpas</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">x</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">airpas</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">x</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end <span class="op">=</span> <span class="st">'2020-02-29'</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, verbose<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end <span class="op">=</span> <span class="st">'2020-02-29'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, verbose<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-4-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-5-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> log(airpas(<span class="dv">1</span> : <span class="dv">614</span>))<span class="op">;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, <span class="dv">12</span>, verbose<span class="op">=</span>true)<span class="op">;</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> log(airpas(<span class="dv">1</span> : <span class="dv">614</span>))<span class="op">;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, <span class="dv">12</span>, verbose<span class="op">=</span>true)<span class="op">;</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -809,11 +873,11 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
 <p>Para el modelo no lineal las predicciones serían similares, pero muchos de los casos particulares no tienen una formulación analítica explícita, aunque siempre se pueden obtener por simulación, como se especifica en la siguiente sección.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Resuelve</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Solución</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">R</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false">Python</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-5" role="tab" aria-controls="tabset-5-5" aria-selected="false">MATLAB/Octave</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false" href="">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false" href="">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-5" role="tab" aria-controls="tabset-5-5" aria-selected="false" href="">MATLAB/Octave</a></li>
 </ul>
 <div class="tab-content">
 <div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
@@ -823,13 +887,16 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 <div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Limpiando memoria</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Limpiando memoria</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Selecionando muestra</span></span>
 <span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">airpas</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -841,12 +908,12 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
 <span><span class="va">bands</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yFor</span> <span class="op">+</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yForV</span><span class="op">)</span>, <span class="va">m</span><span class="op">$</span><span class="va">yFor</span> <span class="op">-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yForV</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Mostrando gráficamente</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">airpas</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">bands</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">bands</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecionando muestra</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecionando muestra</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end <span class="op">=</span> <span class="st">'2020-02-29'</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizonte de predicción</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">24</span></span>
@@ -858,12 +925,12 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrando gráficamente</span></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>plt.plot(airpas[<span class="op">-</span><span class="dv">60</span>:])</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.plot(bands)</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>plt.plot(np.exp(m.yFor))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>plt.plot(np.exp(m.yFor))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-5-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-5-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Limpiando memoria y cargando datos</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Limpiando memoria y cargando datos</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>clear <span class="bu">all</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>load data</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Selecionando muestra</span>
@@ -876,7 +943,7 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>bands <span class="op">=</span> [m.yFor <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> sqrt(m.yForV) m.yFor <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> sqrt(m.yForV)]<span class="op">;</span></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Mostrando gráficamente</span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="dv">590</span> : length(airpas)<span class="op">;</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>plot(t, airpas(t), <span class="dv">615</span> : <span class="dv">614</span> <span class="op">+</span> h, exp([bands m.yFor]))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>plot(t, airpas(t), <span class="dv">615</span> : <span class="dv">614</span> <span class="op">+</span> h, exp([bands m.yFor]))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -887,11 +954,11 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
 <p>Un aspecto final interesante es que el ruido que se simula puede provenir de las propiedades teóricas asumidas para el modelo, habitualmente una distribución normal (<strong>simulación de Montecarlo</strong>), o puede hacerse extrayendo aleatoriamente (con repetición) valores de los residuos estimados (<strong>simulación</strong> <strong><em>bootstrap</em></strong>). El interés del último caso es que se reproduce la distribución empírica de los residuos.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Resuelve</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Solución</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">R</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-4" role="tab" aria-controls="tabset-6-4" aria-selected="false">Python</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-5" role="tab" aria-controls="tabset-6-5" aria-selected="false">MATLAB/Octave</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false" href="">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-4" role="tab" aria-controls="tabset-6-4" aria-selected="false" href="">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-5" role="tab" aria-controls="tabset-6-5" aria-selected="false" href="">MATLAB/Octave</a></li>
 </ul>
 <div class="tab-content">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
@@ -917,9 +984,9 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
    (M,A,M):        0.5474        0.6698        0.5490
   (M,Ad,N):        2.2181        2.2541        2.2181
   (M,Ad,A):        0.3607        0.4903        0.3624
-  (M,Ad,M):        0.5660        0.6955        0.5676
+  (M,Ad,M):        0.5666        0.6962        0.5683
 --------------------------------------------------------
-  Identification time:    0.32583 seconds
+  Identification time:    0.25549 seconds
 --------------------------------------------------------
  -------------------------------------------------------------
   Model: ETS(A,A,A)
@@ -928,29 +995,32 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
  -------------------------------------------------------------
                    Param        S.E.          |T|     |Grad|
  -------------------------------------------------------------
-      Alpha:       0.3367     0.0263      12.7829  1.960e-08
+      Alpha:       0.3367     0.0263      12.7828  1.960e-08
        Beta:       0.0090     0.0036       2.4722  3.111e-09
-      Gamma:       0.3821     0.0288      13.2834  1.394e-08
+      Gamma:       0.3821     0.0288      13.2839  1.394e-08
  -------------------------------------------------------------
    AIC:       0.2950   BIC:       0.4174   AICc:       0.2966
             Log-Likelihood:     -73.5637
  -------------------------------------------------------------
     Summary statistics:
  -------------------------------------------------------------
-         Missing data:      
+         Observations:   614        Missing data:      
          Q( 1):      26.4152         Q( 4):      33.9828
          Q( 8):      58.7637         Q(12):      63.1103
    Bera-Jarque:    1366.6633       P-value:       0.0000
-       H( 206):       0.9863       P-value:       0.4606
+        H(206):       0.9863       P-value:       0.9286
    Outliers (&gt;2.7 ES):    10
          Q( 1):      60.4878         Q( 4):      85.1360
          Q( 8):     104.5970         Q(12):     133.6029
    Bera-Jarque:       8.0994       P-value:       0.0174
-       H( 202):       0.8119       P-value:       0.0698
+        H(202):       0.8119       P-value:       0.1753
  -------------------------------------------------------------</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
@@ -959,26 +1029,32 @@ y_{T+h}=wF^{h-1}x_{T}+\sum_{l=2}^{h-1} wF^{h-l}g\epsilon_{T+l}+\epsilon_{T+h}
     Shapiro-Wilk normality test
 
 data:  x
-W = 0.93852, p-value &lt; 2.2e-16</code></pre>
+W = 0.93705, p-value &lt; 2.2e-16</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
 
 data:  x
-W = 0.97853, p-value &lt; 2.2e-16</code></pre>
+W = 0.97626, p-value &lt; 2.2e-16</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 <div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">airpas</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">h</span> <span class="op">=</span> <span class="fl">24</span></span>
 <span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/UComp/man/ETS.html">ETS</a></span><span class="op">(</span><span class="va">x</span>, bootstrap <span class="op">=</span> <span class="cn">TRUE</span>, h <span class="op">=</span> <span class="va">h</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -992,12 +1068,12 @@ W = 0.97853, p-value &lt; 2.2e-16</code></pre>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">yFor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">bands</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Tests de gaussianidad de distribución de errores de predicción</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/gaussTest.html">gaussTest</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">ySimul</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/gaussTest.html">gaussTest</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">ySimul</span><span class="op">[</span><span class="fl">12</span>, <span class="op">]</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/gaussTest.html">gaussTest</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">ySimul</span><span class="op">[</span><span class="fl">12</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-6-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-4-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end <span class="op">=</span> <span class="st">'2020-02-29'</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(np.log(airpas), end <span class="op">=</span> <span class="st">'2020-02-29'</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">24</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> ETS(x, bootstrap<span class="op">=</span><span class="va">True</span>, h<span class="op">=</span>h, verbose<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculando bandas de confianza empíricas</span></span>
@@ -1010,12 +1086,12 @@ W = 0.97853, p-value &lt; 2.2e-16</code></pre>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>plt.plot(np.exp(m.yFor))</span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests de gaussianidad de distribución de errores de predicción</span></span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>gaussTest(m.ySimul[<span class="dv">0</span>, ])</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>gaussTest(m.ySimul[<span class="dv">11</span>, ])</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>gaussTest(m.ySimul[<span class="dv">11</span>, ])</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-6-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-5-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>clear <span class="bu">all</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>clear <span class="bu">all</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>load data</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> log(airpas(<span class="dv">1</span> : <span class="dv">614</span>))<span class="op">;</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">24</span><span class="op">;</span></span>
@@ -1030,7 +1106,7 @@ W = 0.97853, p-value &lt; 2.2e-16</code></pre>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>plot(t, airpas(t), <span class="dv">615</span> : <span class="dv">614</span> <span class="op">+</span> h, exp([bands m.yFor]))</span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Tests de gaussianidad de distribución de errores de predicción</span>
 <span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>toolTEST(m.ySimul(<span class="dv">1</span>, :))<span class="op">;</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>toolTEST(m.ySimul(<span class="dv">12</span>, :))<span class="op">;</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>toolTEST(m.ySimul(<span class="dv">12</span>, :))<span class="op">;</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1039,11 +1115,11 @@ W = 0.97853, p-value &lt; 2.2e-16</code></pre>
 <span class="header-section-number">4.6</span> Análisis completo de la serie de pasajeros de avión</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Resuelve</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Solución</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">R</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-4" role="tab" aria-controls="tabset-7-4" aria-selected="false">Python</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-5" role="tab" aria-controls="tabset-7-5" aria-selected="false">MATLAB/Octave</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true" href="">Resuelve</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false" href="">Solución</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false" href="">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-4" role="tab" aria-controls="tabset-7-4" aria-selected="false" href="">Python</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-5" role="tab" aria-controls="tabset-7-5" aria-selected="false" href="">MATLAB/Octave</a></li>
 </ul>
 <div class="tab-content">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
@@ -1061,29 +1137,32 @@ W = 0.97853, p-value &lt; 2.2e-16</code></pre>
  -------------------------------------------------------------
                    Param        S.E.          |T|     |Grad|
  -------------------------------------------------------------
-      Alpha:       0.3184     0.0263      12.0859  3.553e-07
-       Beta:       0.0078     0.0040       1.9396  1.066e-06
-      Gamma:       0.3705     0.0290      12.7913  1.776e-06
+      Alpha:       0.3184     0.0263      12.0885  2.487e-06
+       Beta:       0.0078     0.0040       1.9501  7.105e-07
+      Gamma:       0.3705     0.0290      12.7902  2.487e-06
  -------------------------------------------------------------
    AIC:      17.3254   BIC:      17.4499   AICc:      17.3270
             Log-Likelihood:   -5180.6098
  -------------------------------------------------------------
     Summary statistics:
  -------------------------------------------------------------
-         Missing data:      
-         Q( 1):      21.2068         Q( 4):      30.1929
-         Q( 8):      52.6640         Q(12):      55.6965
-   Bera-Jarque:    4270.0498       P-value:       0.0000
-       H( 202):       0.9096       P-value:       0.2507
+         Observations:   600        Missing data:      
+         Q( 1):      21.2429         Q( 4):      30.2575
+         Q( 8):      52.7052         Q(12):      55.7343
+   Bera-Jarque:    4268.8882       P-value:       0.0000
+        H(202):       0.9096       P-value:       0.5377
    Outliers (&gt;2.7 ES):     9
-         Q( 1):      64.0726         Q( 4):      93.2012
-         Q( 8):     107.5363         Q(12):     135.1078
-   Bera-Jarque:       7.1247       P-value:       0.0284
-       H( 198):       0.8127       P-value:       0.0727
+         Q( 1):      64.1340         Q( 4):      93.3264
+         Q( 8):     107.6315         Q(12):     135.1847
+   Bera-Jarque:       7.1370       P-value:       0.0282
+        H(198):       0.8127       P-value:       0.1775
  -------------------------------------------------------------</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary statistics:
@@ -1091,47 +1170,47 @@ W = 0.97853, p-value &lt; 2.2e-16</code></pre>
                         Serie 1
 Data points:          596.00000
 Missing:               12.00000
-Minimum:               -0.16129
+Minimum:               -0.16131
 1st quartile:          -0.02145
 Mean:                   0.00217
-P(Mean = 0):            0.26186
+P(Mean = 0):            0.26194
 Median:                 0.00263
-3rd quartile:           0.02881
-Maximum:                0.43473
-Interquartile range:    0.05025
+3rd quartile:           0.02882
+Maximum:                0.43471
+Interquartile range:    0.05027
 Range:                  0.59602
 Satandard deviation:    0.04678
 Variance:               0.00219
-Skewness:               1.05824
-Kurtosis:              12.82666
+Skewness:               1.05798
+Kurtosis:              12.82549
 Autocorrelation tests:
 =====================
      SACF sa      LB p.val  SPACF sp
-1   0.184  +  19.854     0  0.184  +
-2   0.086  +  24.203     0  0.054  .
-3   0.019  .  24.419     0 -0.006  .
-4   0.087  +  28.873     0  0.083  +
-5  -0.115  -  36.731     0 -0.152  -
-6  -0.113  -  44.305     0 -0.082  .
-7  -0.079  .  48.002     0 -0.029  .
-8  -0.060  .  50.127     0 -0.040  .
-9  -0.023  .  50.447     0  0.027  .
-10  0.038  .  51.310     0  0.051  .
-11  0.032  .  51.904     0  0.003  .
-12  0.048  .  53.299     0  0.027  .
-13  0.240  +  87.908     0  0.222  +
-14  0.093  +  93.154     0 -0.009  .
-15  0.027  .  93.577     0 -0.016  .
-16 -0.008  .  93.615     0 -0.010  .
-17 -0.031  .  94.181     0 -0.075  .
-18 -0.118  - 102.612     0 -0.059  .
-19 -0.191  - 124.817     0 -0.120  -
-20 -0.107  - 131.815     0 -0.028  .
-21 -0.007  . 131.843     0  0.068  .
-22 -0.014  . 131.967     0  0.000  .
-23  0.032  . 132.611     0  0.027  .
-24 -0.015  . 132.746     0 -0.068  .
-25  0.156  + 147.570     0  0.128  +
+1   0.184  +  19.885     0  0.184  +
+2   0.086  +  24.247     0  0.054  .
+3   0.019  .  24.465     0 -0.006  .
+4   0.087  +  28.925     0  0.083  +
+5  -0.115  -  36.773     0 -0.151  -
+6  -0.113  -  44.337     0 -0.082  .
+7  -0.079  .  48.029     0 -0.029  .
+8  -0.060  .  50.152     0 -0.040  .
+9  -0.023  .  50.473     0  0.027  .
+10  0.038  .  51.335     0  0.051  .
+11  0.032  .  51.928     0  0.003  .
+12  0.048  .  53.323     0  0.027  .
+13  0.240  +  87.907     0  0.222  +
+14  0.093  +  93.151     0 -0.009  .
+15  0.027  .  93.574     0 -0.017  .
+16 -0.008  .  93.612     0 -0.010  .
+17 -0.031  .  94.177     0 -0.075  .
+18 -0.118  - 102.606     0 -0.059  .
+19 -0.191  - 124.804     0 -0.120  -
+20 -0.107  - 131.801     0 -0.028  .
+21 -0.007  . 131.829     0  0.068  .
+22 -0.014  . 131.954     0  0.000  .
+23  0.032  . 132.596     0  0.027  .
+24 -0.015  . 132.732     0 -0.068  .
+25  0.156  + 147.541     0  0.128  +
 Gaussianity tests:
 =================
 
@@ -1143,36 +1222,42 @@ W = 0.91717, p-value &lt; 2.2e-16
 Ratio of variance tests:
 =======================
  Portion_of_data F_statistic p.value
-         0.33333      0.9149  0.5374</code></pre>
+         0.33333      0.9149  0.5371</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     ME     RMSE       MAE         MPE     PRMSE      MAPE
 naive        -5053.6817 6714.306 5430.9235 -19.6385890 25.959385 22.034494
 naiveS       -1059.6768 1118.936 1059.6768  -4.9411708  5.236211  4.941171
 mediaAnual   -1059.6768 4545.890 4167.7368  -0.6446591 20.999410 19.319335
-m$yFor         695.0559 1080.267  805.5044   2.6233379  4.216031  3.315608
+m$yFor         695.0486 1080.260  805.5015   2.6233018  4.216001  3.315597
 exp(ml$yFor)   959.6937 1356.295 1043.8803   3.7791764  5.327165  4.311714
                  sMAPE     MASE     RelMAE Theil's U
 naive        26.008694 9.334455 0.19049909 1.9629025
 naiveS        5.082549 1.821330 0.03717001 0.3959328
 mediaAnual   19.361054 7.163340 0.14619062 1.5878571
-m$yFor        3.235855 1.384469 0.02825447 0.3187926
+m$yFor        3.235846 1.384464 0.02825437 0.3187903
 exp(ml$yFor)  4.179551 1.794180 0.03661592 0.4028102</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="03-etsSSOEenSS_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Los modelos elementales producen predicciones mejores que los modelos más sofisticados. Esto resulta bastante desesperanzador, pero no debemos olvidar que estamos evaluando los modelos sobre un solo origen de predicción. Esto es bastante inapropiado, puesto que un buen modelo será aquel que produzca mejores predicciones de forma sistemática, es decir, con varios orígenes de predicción, que es lo que haremos más adelante.</p>
 </div>
 <div id="tabset-7-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-3-tab">
 <div class="cell">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Limpiando memoria</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Limpiando memoria</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Cargando librerías</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">UComp</span><span class="op">)</span></span>
@@ -1201,12 +1286,12 @@ exp(ml$yFor)  4.179551 1.794180 0.03661592 0.4028102</code></pre>
 <span><span class="co"># Precisión de predicciones</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/UComp/man/Accuracy.html">Accuracy</a></span><span class="op">(</span><span class="va">predicciones</span>, <span class="va">airpas</span><span class="op">)</span></span>
 <span><span class="co"># Representación gráfica</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">airpas</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="va">predicciones</span><span class="op">)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">airpas</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autolayer.html">autolayer</a></span><span class="op">(</span><span class="va">predicciones</span><span class="op">)</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-7-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-4-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> UComp <span class="im">import</span> <span class="op">*</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> UComp <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionando muestra</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> window(airpas, end<span class="op">=</span><span class="st">'2018-12-31'</span>)</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformando variable</span></span>
@@ -1232,12 +1317,12 @@ exp(ml$yFor)  4.179551 1.794180 0.03661592 0.4028102</code></pre>
 <span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>Accuracy(predicciones, airpas)</span>
 <span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Representación gráfica</span></span>
 <span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>plt.plot(airpas[<span class="op">-</span><span class="dv">60</span>:])</span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>plt.plot(predicciones)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>plt.plot(predicciones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-7-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-5-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Limpiando memoria y cargando datos</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Limpiando memoria y cargando datos</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>clear <span class="bu">all</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>load data</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Seleccionando muestra</span>
@@ -1264,7 +1349,7 @@ exp(ml$yFor)  4.179551 1.794180 0.03661592 0.4028102</code></pre>
 <span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>Accuracy(predicciones, airpas(<span class="dv">1</span> : <span class="dv">600</span> <span class="op">+</span> h), <span class="dv">12</span>)</span>
 <span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="op">%</span> Representación gráfica</span>
 <span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> (<span class="dv">553</span> : length(airpas))<span class="st">';</span></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="er">plot</span>(t, airpas(t), (<span class="dv">601</span> : <span class="dv">600</span> <span class="op">+</span> h), predicciones)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="er">plot</span>(t, airpas(t), (<span class="dv">601</span> : <span class="dv">600</span> <span class="op">+</span> h), predicciones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1275,43 +1360,58 @@ exp(ml$yFor)  4.179551 1.794180 0.03661592 0.4028102</code></pre>
 
 
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -1319,200 +1419,352 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copiado");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copiado");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
-    };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
       });
     }
-  }
-});
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./02-etsSSOE.html" class="pagination-link">
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./02-etsSSOE.html" class="pagination-link" aria-label="Suavizado Exponencial">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Suavizado Exponencial</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04-etsMSOE.html" class="pagination-link">
+      <a href="./04-etsMSOE.html" class="pagination-link" aria-label="Suavizado Exponencial con mútiples ruidos">
         <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Suavizado Exponencial con mútiples ruidos</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
